@@ -9,8 +9,8 @@
         if (condition) {                                            \
             std::cout << "Passed: " << #condition << std::endl;     \
         } else {                                                    \
-            std::cout << "Failed: " << #condition << std::endl;     \
-            assert(condition);                                      \
+            std::cerr << "Failed: " << #condition << std::endl;     \
+            std::abort();                                           \
         }                                                           \
     }
 

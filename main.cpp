@@ -9,7 +9,8 @@
     }
 
 //TEST(longest_substring_without_repeating_characters)
-TEST(zig_zag_conversion)
+//TEST(zig_zag_conversion)
+TEST(max_increase_to_keep_city_skyline)
 
 int main(int argc, char** argv)
 {

@@ -10,7 +10,9 @@
 
 //TEST(longest_substring_without_repeating_characters)
 //TEST(zig_zag_conversion)
-TEST(max_increase_to_keep_city_skyline)
+//TEST(max_increase_to_keep_city_skyline)
+//TEST(string_to_integer)
+TEST(three_sum);
 
 int main(int argc, char** argv)
 {

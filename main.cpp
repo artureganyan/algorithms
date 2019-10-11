@@ -12,7 +12,8 @@
 //TEST(zig_zag_conversion)
 //TEST(max_increase_to_keep_city_skyline)
 //TEST(string_to_integer)
-TEST(three_sum);
+//TEST(three_sum);
+TEST(three_sum_closest);
 
 int main(int argc, char** argv)
 {

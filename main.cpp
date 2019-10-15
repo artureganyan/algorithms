@@ -15,7 +15,8 @@
 //TEST(three_sum);
 //TEST(three_sum_closest);
 //TEST(integer_to_roman);
-TEST(letter_combinations_of_phone_number);
+//TEST(letter_combinations_of_phone_number);
+TEST(four_sum);
 
 int main(int argc, char** argv)
 {

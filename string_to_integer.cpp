@@ -1,4 +1,4 @@
-// Desription: https://leetcode.com/problems/string-to-integer-atoi/
+// Problem: https://leetcode.com/problems/string-to-integer-atoi/
 
 #include <string>
 #include <limits>

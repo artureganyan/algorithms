@@ -1,4 +1,4 @@
-// Desription: https://leetcode.com/problems/max-increase-to-keep-city-skyline/
+// Problem: https://leetcode.com/problems/max-increase-to-keep-city-skyline/
 
 #include <vector>
 #include "utils.h"

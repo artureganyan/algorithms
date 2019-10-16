@@ -1,4 +1,4 @@
-// Desription: https://leetcode.com/problems/zigzag-conversion/
+// Problem: https://leetcode.com/problems/zigzag-conversion/
 
 #include <string>
 #include "utils.h"

@@ -1,4 +1,4 @@
-// Desription: https://leetcode.com/problems/integer-to-roman/
+// Problem: https://leetcode.com/problems/integer-to-roman/
 
 #include <string>
 #include "utils.h"

@@ -1,4 +1,4 @@
-// Desription: https://leetcode.com/problems/4sum/
+// Problem: https://leetcode.com/problems/4sum/
 
 #include <vector>
 #include <algorithm>

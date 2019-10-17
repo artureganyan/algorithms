@@ -6,6 +6,9 @@
 #include <unordered_set>
 #include <vector>
 
+
+// Test
+
 #define ASSERT(condition)                                           \
     {                                                               \
         if (condition) {                                            \
@@ -15,6 +18,9 @@
             std::abort();                                           \
         }                                                           \
     }
+
+
+// Set
 
 template <template <typename, typename...> class Container, typename T>
 bool compare_sets(const Container<T>& set1, const Container<T>& set2)
@@ -45,6 +51,63 @@ bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std
             return false;
     }
     return true;
+}
+
+
+// List
+
+template <typename Node>
+class DefaultListTraits {
+public:
+    typedef decltype(Node::val) Value;
+
+    static Node* next(Node* node)
+    {
+        return node ? node->next : nullptr;
+    }
+
+    static int value(Node* node)
+    {
+        return node ? node->val : 0;
+    }
+};
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+std::vector<typename Traits::Value> list_to_vector(Node* head)
+{
+    std::vector<typename Traits::Value> result;
+
+    Node* node = head;
+    while (node) {
+        result.push_back(Traits::value(node));
+        node = node->next;
+    }
+
+    return result;
+}
+
+template <typename Node, typename Traits>
+bool compare_lists(Node* head1, Node* head2)
+{
+    while (head1 && head2) {
+        if (Traits::value(head1) != Traits::value(head2))
+            return false;
+        head1 = Traits::next(head1);
+        head2 = Traits::next(head2);
+    }
+    return head1 == nullptr && head2 == nullptr;
+}
+
+template <typename Node, typename Container, typename Traits = DefaultListTraits<Node>>
+bool compare_lists(Node* head, const Container& values)
+{
+    return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
+}
+
+template <typename Node, typename Traits = ::DefaultListTraits<Node>>
+bool compare_lists(Node* head, std::initializer_list<typename Traits::Value> values)
+{
+    return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
 }
 
 #endif

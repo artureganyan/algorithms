@@ -17,7 +17,8 @@
 //TEST(integer_to_roman);
 //TEST(letter_combinations_of_phone_number);
 //TEST(four_sum);
-TEST(remove_nth_node_from_end_of_list);
+//TEST(remove_nth_node_from_end_of_list);
+TEST(generate_parentheses);
 
 int main(int argc, char** argv)
 {

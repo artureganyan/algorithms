@@ -70,6 +70,41 @@ public:
     {
         return node ? node->val : 0;
     }
+
+    static Node* create(const Value& value)
+    {
+        return new Node{value};
+    }
+
+    static void destroy(Node* node)
+    {
+        if (node)
+            delete node;
+    }
+};
+
+template <typename Node>
+class TemporaryList {
+public:
+    TemporaryList(Node* node) : node_(node) {}
+
+    ~TemporaryList()
+    {
+        Node* node = node_;
+        while (node) {
+            Node* next = node->next;
+            delete node;
+            node = next;
+        }
+    }
+
+    operator Node*() const
+    {
+        return node_;
+    }
+
+private:
+    Node* node_;
 };
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
@@ -84,6 +119,28 @@ std::vector<typename Traits::Value> list_to_vector(Node* head)
     }
 
     return result;
+}
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+Node* create_list(std::initializer_list<typename Traits::Value> values)
+{
+    Node* head = nullptr;
+    Node* prev = nullptr;
+    for (const typename Traits::Value& value : values) {
+        Node* node = Traits::create(value);
+        if (prev)
+            prev->next = node;
+        prev = node;
+        if (!head)
+            head = node;
+    }
+    return head;
+}
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+TemporaryList<Node> create_temp_list(std::initializer_list<typename Traits::Value> values)
+{
+    return TemporaryList<Node>(create_list<Node, Traits>(values));
 }
 
 template <typename Node, typename Traits>

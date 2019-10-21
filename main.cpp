@@ -20,4 +20,5 @@
 //TEST(four_sum);
 //TEST(remove_nth_node_from_end_of_list);
 //TEST(generate_parentheses);
-TEST(swap_nodes_in_pairs);
+//TEST(swap_nodes_in_pairs);
+TEST(jump_game);

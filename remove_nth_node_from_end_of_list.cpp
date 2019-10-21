@@ -88,28 +88,6 @@ public:
     }
 };
 
-class ListTraits {
-public:
-    typedef int Value;
-
-    static bool areEqual(ListNode* node1, ListNode* node2)
-    {
-        if (!node1 || !node2)
-            return false;
-        return node1->val == node2->val;
-    }
-
-    static ListNode* next(ListNode* node)
-    {
-        return node ? node->next : nullptr;
-    }
-
-    static int value(ListNode* node)
-    {
-        return node ? node->val : 0;
-    }
-};
-
 int main()
 {
     auto methods = {&Solution::run, &Solution::run_2passes};

@@ -83,7 +83,7 @@ public:
     }
 };
 
-template <typename Node>
+template <typename Node, typename Traits = DefaultListTraits<Node>>
 class TemporaryList {
 public:
     TemporaryList(Node* node) : node_(node) {}
@@ -93,7 +93,7 @@ public:
         Node* node = node_;
         while (node) {
             Node* next = node->next;
-            delete node;
+            Traits::destroy(node);
             node = next;
         }
     }

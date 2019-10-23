@@ -26,8 +26,8 @@ public:
         std::vector<std::string> result;
 
         for (int p = 1; p <= n; p++) {
-            std::vector<std::string> inner = run2(p - 1);
-            std::vector<std::string> outer = run2(n - p);
+            std::vector<std::string> inner = run(p - 1);
+            std::vector<std::string> outer = run(n - p);
             for (size_t ii = 0; ii < inner.size(); ii++) {
                 for (size_t io = 0; io < outer.size(); io++) {
                     result.push_back("(" + inner[ii] + ")" + outer[io]);

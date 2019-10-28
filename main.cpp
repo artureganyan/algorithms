@@ -26,4 +26,5 @@
 //TEST(container_with_most_water);
 //TEST(next_permutation);
 //TEST(search_in_rotated_array)
-TEST(find_first_and_last_position_of_element_in_sorted_array)
+//TEST(find_first_and_last_position_of_element_in_sorted_array)
+TEST(valid_sudoku)

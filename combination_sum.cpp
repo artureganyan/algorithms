@@ -128,7 +128,7 @@ private:
 
 
 template <typename Solution>
-int test()
+void test()
 {
     ASSERT(compare_sets(Solution().run({}, 1), {}));
     ASSERT(compare_sets(Solution().run({-1}, 1), {}));

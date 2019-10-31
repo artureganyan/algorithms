@@ -29,4 +29,5 @@
 //TEST(find_first_and_last_position_of_element_in_sorted_array);
 //TEST(valid_sudoku);
 //TEST(combination_sum);
-TEST(multiply_strings);
+//TEST(multiply_strings);
+TEST(permutations);

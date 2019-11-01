@@ -1,13 +1,16 @@
 // Problem: https://leetcode.com/problems/permutations/
 
 #include <vector>
+#include <list>
+#include <algorithm>
+#include <numeric>
 #include "utils.h"
 
 namespace permutations {
 
 // Uses the solution of the next_permutation problem
 
-class Solution {
+class Solution1 {
 public:
     // Time: O(n * n!), Space: O(n * n!), n = nums.size()
     //
@@ -70,14 +73,139 @@ private:
     }
 };
 
-int main()
+
+// Recursively generates all possible permutations, supposing that
+// they can be returned in any order.
+
+class Solution2 {
+public:
+    // Time: O(n^2 * n!), Space: O(n * n!), recursion depth = n
+    std::vector<std::vector<int>> run(const std::vector<int>& nums)
+    {
+        if (!nums.size())
+            return {};
+
+        std::list<int> nums_list(nums.begin(), nums.end());
+        return generatePermutations(nums_list);
+    }
+
+private:
+    // Time: O(n^2 * n!), Space: O(n * n!), n = nums.size(), recursion depth = n
+    //
+    // Note: Time includes n^2 because each of n! permutation is created by
+    // by copying the current sequence (intially {}), adding the next number
+    // and repeating the same for each of n recursion steps:
+    // {} -> {1} -> {1, 2} -> {1, 2, 3} -> ...
+    // So we have 0 + 1 + 2 + ... + n copies, giving O(n^2) time.
+    //
+    // Note: This solution may frequently use dynamic memory because it
+    // removes/inserts an element in the list.
+    //
+    std::vector<std::vector<int>> generatePermutations(std::list<int>& nums)
+    {
+        if (!nums.size())
+            return {{}}; // Non-empty result
+
+        std::vector<std::vector<int>> result;
+
+        for (size_t i = 0; i < nums.size(); i++) {
+            const int value = nums.front();
+            nums.pop_front();
+
+            std::vector<std::vector<int>> permutations = generatePermutations(nums);
+            for (size_t r = 0; r < permutations.size(); r++) {
+                permutations[r].push_back(value);
+            }
+            result.insert(result.end(), permutations.begin(), permutations.end());
+
+            nums.push_back(value);
+        }
+
+        return result;
+    }
+};
+
+
+// The same as Solution2, but optimized to avoid copying of intermediate
+// results and avoid removing/inserting a number on each recursive call.
+
+class Solution3 {
+public:
+    // Time: O(n * n!), Space: O(n * n!), n = nums.size(), recursion depth = n
+    std::vector<std::vector<int>> run(const std::vector<int>& nums_)
+    {
+        if (!nums_.size())
+            return {};
+
+        std::vector<int> nums = nums_;
+
+        // Preallocate the result array
+        int result_size = 1;
+        for (int i = 2; i <= nums.size(); i++)
+            result_size *= i;
+
+        std::vector<std::vector<int>> result(result_size);
+
+        // Generate permutations
+        std::vector<std::vector<int>>::iterator result_pos = result.begin();
+        generatePermutations(nums, 0, result_pos);
+        return result;
+    }
+
+private:
+    // Generates all possible permutations for nums[nums_begin, nums.size() - 1]
+    // and puts them into [result, result + count], where count is the number of
+    // permutations, i.e. (nums.size() - nums_begin)!.
+    //
+    // Time: O(n * n!), Space: O(n * n!), n = nums.size(), recursion depth = n
+    //
+    void generatePermutations(std::vector<int>& nums, int nums_begin, std::vector<std::vector<int>>::iterator& result) const
+    {
+        if (nums_begin == nums.size()) {
+            *result = std::vector<int>(nums.size(), 0);
+            result++;
+            return;
+        }
+
+        for (int i = nums_begin; i < nums.size(); i++) {
+            auto result_prev = result;
+            std::swap(nums[i], nums[nums_begin]);
+
+            generatePermutations(nums, nums_begin + 1, result);
+            for (auto r = result_prev; r < result; r++)
+                (*r)[nums_begin] = nums[nums_begin];
+        }
+        for (int i = nums_begin + 1; i < nums.size(); i++)
+            std::swap(nums[i], nums[i - 1]);
+    }
+};
+
+
+template <typename Solution>
+void test()
 {
     ASSERT(compare_sets(Solution().run({}), {}));
     ASSERT(compare_sets(Solution().run({1}), {{1}}));
     ASSERT(compare_sets(Solution().run({1, 2}), {{1, 2}, {2, 1}}));
-    ASSERT(compare_sets(Solution().run({2, 1}), {{1, 2}, {2, 1}}));
     ASSERT(compare_sets(Solution().run({1, 2, 3}), {{1, 2, 3}, {1, 3, 2}, {2, 3, 1}, {2, 1, 3}, {3, 1, 2}, {3, 2, 1}}));
-    ASSERT(compare_sets(Solution().run({3, 1, 2}), {{1, 2, 3}, {1, 3, 2}, {2, 3, 1}, {2, 1, 3}, {3, 1, 2}, {3, 2, 1}}));
+
+    // Test performance
+    std::vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
+    std::cout << "Run for " << nums.size() << " numbers" << std::endl;
+    clock_t start = clock();
+
+    Solution().run(nums);
+
+    double elapsed_secs = double(clock() - start) / CLOCKS_PER_SEC;
+    std::cout << "Elapsed: " << elapsed_secs << " seconds" << std::endl;
+}
+
+int main()
+{
+    test<Solution1>();
+    test<Solution2>();
+    test<Solution3>();
 
     return 0;
 }

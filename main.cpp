@@ -30,4 +30,5 @@
 //TEST(valid_sudoku);
 //TEST(combination_sum);
 //TEST(multiply_strings);
-TEST(permutations);
+//TEST(permutations);
+TEST(rotate_image);

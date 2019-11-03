@@ -31,4 +31,5 @@
 //TEST(combination_sum);
 //TEST(multiply_strings);
 //TEST(permutations);
-TEST(rotate_image);
+//TEST(rotate_image);
+TEST(group_anagrams);

@@ -32,4 +32,5 @@
 //TEST(multiply_strings);
 //TEST(permutations);
 //TEST(rotate_image);
-TEST(group_anagrams);
+//TEST(group_anagrams);
+TEST(pow_x_n);

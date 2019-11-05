@@ -33,4 +33,5 @@
 //TEST(permutations);
 //TEST(rotate_image);
 //TEST(group_anagrams);
-TEST(pow_x_n);
+//TEST(pow_x_n);
+TEST(spiral_matrix);

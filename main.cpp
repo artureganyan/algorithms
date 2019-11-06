@@ -34,4 +34,5 @@
 //TEST(rotate_image);
 //TEST(group_anagrams);
 //TEST(pow_x_n);
-TEST(spiral_matrix);
+//TEST(spiral_matrix);
+TEST(merge_intervals);

@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <iostream>
+#include <sstream>
 #include <cassert>
 #include <unordered_set>
 #include <vector>
@@ -9,15 +10,47 @@
 
 // Test
 
-#define ASSERT(condition)                                           \
+#define ASSERT_EX(condition, message)                               \
     {                                                               \
         if (condition) {                                            \
-            std::cout << "Passed: " << #condition << std::endl;     \
+            std::cout << "Passed: " << (message) << std::endl;      \
         } else {                                                    \
-            std::cerr << "Failed: " << #condition << std::endl;     \
+            std::cerr << "Failed: " << (message) << std::endl;      \
             std::abort();                                           \
         }                                                           \
     }
+
+#define ASSERT(condition) \
+    ASSERT_EX(condition, #condition)
+
+
+// Strings
+
+template <typename T>
+std::string to_string(const T& value)
+{
+    std::stringstream s;
+    s << value;
+    return s.str();
+}
+
+template <typename T, template <typename, typename...> typename Container>
+std::string to_string(const Container<T>& container)
+{
+    std::stringstream s;
+
+    s << "{";
+    int i = 0;
+    for (const T& value : container) {
+        if (i)
+            s << ", ";
+        s << to_string(value);
+        i++;
+    }
+    s << "}";
+
+    return s.str();
+}
 
 
 // Set

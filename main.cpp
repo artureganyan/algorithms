@@ -35,4 +35,5 @@
 //TEST(group_anagrams);
 //TEST(pow_x_n);
 //TEST(spiral_matrix);
-TEST(merge_intervals);
+//TEST(merge_intervals);
+TEST(spiral_matrix_2);

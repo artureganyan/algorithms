@@ -12,12 +12,19 @@ namespace group_anagrams {
 
 class Solution {
 public:
-    // If only lowercase characters a-z are supported:
+    // 1. If only lowercase characters a-z are supported:
     // Time: O(n * s), Space: O(n * s), n - number of strings, s - average string size
     //
-    // If any characters are supported:
+    // Note: It can be optimized by using keys of type std::array<int /*char count*/, ALPHABET_SIZE>
+    // instead of std::string for the anagrams map, with a good hash function to
+    // avoid collisions (probably the one for std::string could be reused). Since keys
+    // will have fixed size, this should be better for long strings and worse for
+    // the short ones.
+    //
+    // 2. If any characters are supported:
     // Time: O(n * s_max * log(s_max))), Space: O(n * s_avg),
     // n - number of strings, s_max - maximum string size, s_avg - average string size
+    //
     // Note: The real time is like n1 * s1 * log(s1) + ... + nk * sk * log(sk) + n * s_avg * 3,
     // where the sum of logarithms describes sortings, the last addition describes
     // copyings, ni - a number of strings in the group i, si - a size of each string
@@ -52,6 +59,7 @@ public:
     }
 
 private:
+#ifdef LOWERCASE_ALPHABET_ONLY
     // Sorts the string s inplace, in linear time.
     //
     // Time: O(n), Space: O(1), n = s.size()
@@ -82,6 +90,7 @@ private:
                 s[p++] = c;
         }
     }
+#endif
 };
 
 

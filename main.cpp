@@ -36,4 +36,5 @@
 //TEST(pow_x_n);
 //TEST(spiral_matrix);
 //TEST(merge_intervals);
-TEST(spiral_matrix_2);
+//TEST(spiral_matrix_2);
+TEST(permutation_sequence)

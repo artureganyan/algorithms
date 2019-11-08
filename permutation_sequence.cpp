@@ -1,6 +1,7 @@
 // Problem: https://leetcode.com/problems/permutation-sequence/
 
 #include <vector>
+#include <array>
 #include <string>
 #include "utils.h"
 
@@ -25,14 +26,14 @@ public:
             return {};
 
         // Idea:
-        // For any given n > 0 and digits = {d1, d2, ..., dn}, there are
-        // (n-1)! permutations starting with digit d1, (n-1)! starting with
-        // d2, etc. So the first digit of the k-th permutation is
-        // d = digits[floor((k-1) / (n-1)!)], 1 <= k <= n!. Then repeat
-        // the same for n = n-1 and digits = digits.without(d).
-        std::vector<int> digits(n);
+        // For any given n > 0 and digits = {d1, d2, ..., dn}, there are (n-1)!
+        // permutations starting with digit d1, (n-1)! starting with d2, etc.
+        // So the k-th permutation starts with digits[i], i = floor((k-1) / (n-1)!),
+        // 1 <= k <= n!. Then repeat the same for the rest n-1 digits:
+        // k = k - i * (n-1)!, n = n - 1, digits = digits.without(i).
+        std::vector<char> digits(n);
         for (int i = 0; i < n; i++)
-            digits[i] = i + 1;
+            digits[i] = '1' + i;
 
         std::string result(n, 0);
         for (int i = 0; i < n; i++) {
@@ -42,7 +43,7 @@ public:
             const int index = (k - 1) / count;
             assert(0 <= index && index < n);
 
-            result[i] = '0' + digits[index];
+            result[i] = digits[index];
             digits.erase(digits.begin() + index);
 
             k -= index * count;
@@ -53,15 +54,19 @@ public:
 };
 
 
-// The same as Solution1, but stores digits in the integer and removes them in O(1) time
+// The same as Solution1, but stores digits in the integer and removes them
+// in O(1) time.
+//
+// Warning: The actual performance may be similar to or even worse than the
+// Solution1. It depends on the number of divisions in the code, and on the
+// optimization. Also, the Solution1 can be adapted to an alphabet of the
+// arbitrary size, while this one can't.
 
 class Solution2 {
 public:
-    // Time: O(n), Space: O(n)
+    // Returns k-th permutation of the sequence "12...n".
     //
-    // Warning: The actual performance may be similar to or even worse than
-    // the Solution1. It depends on the number of divisions in the code, and
-    // on the optimization.
+    // Time: O(n), Space: O(n)
     //
     std::string run(int n, int k)
     {

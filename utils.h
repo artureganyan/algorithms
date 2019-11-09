@@ -125,11 +125,11 @@ public:
 template <typename Node, typename Traits = DefaultListTraits<Node>>
 class TemporaryList {
 public:
-    TemporaryList(Node* node) : node_(node) {}
+    TemporaryList(Node* node) : head_(node) {}
 
     ~TemporaryList()
     {
-        Node* node = node_;
+        Node* node = head_;
         while (node) {
             Node* next = node->next;
             Traits::destroy(node);
@@ -139,11 +139,11 @@ public:
 
     operator Node*() const
     {
-        return node_;
+        return head_;
     }
 
 private:
-    Node* node_;
+    Node* head_;
 };
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
@@ -177,12 +177,23 @@ Node* create_list(std::initializer_list<typename Traits::Value> values)
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
+void destroy_list(Node* head)
+{
+    Node* node = head;
+    while (node) {
+        Node* next = node->next;
+        Traits::destroy(node);
+        node = next;
+    }
+}
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
 TemporaryList<Node> create_temp_list(std::initializer_list<typename Traits::Value> values)
 {
     return TemporaryList<Node>(create_list<Node, Traits>(values));
 }
 
-template <typename Node, typename Traits>
+template <typename Node, typename Traits = DefaultListTraits<Node>>
 bool compare_lists(Node* head1, Node* head2)
 {
     while (head1 && head2) {

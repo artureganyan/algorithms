@@ -38,4 +38,5 @@
 //TEST(merge_intervals);
 //TEST(spiral_matrix_2);
 //TEST(permutation_sequence);
-TEST(rotate_list);
+//TEST(rotate_list);
+TEST(unique_paths);

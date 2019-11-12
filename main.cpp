@@ -39,4 +39,5 @@
 //TEST(spiral_matrix_2);
 //TEST(permutation_sequence);
 //TEST(rotate_list);
-TEST(unique_paths);
+//TEST(unique_paths);
+TEST(unique_paths_2);

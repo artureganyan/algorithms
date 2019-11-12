@@ -94,21 +94,26 @@ public:
             }
             // Count top border of the outer rectangle
             for (int ci = r, ri = t; ci > l; ci--) {
-                count[ri][ci] += count[ri + 1][ci];
-                count[ri][ci] += count[ri][ci + 1];
+                calculateCount(count, ri, ci);
             }
             // Count left border of the outer rectangle
             for (int ri = b, ci = l; ri > t; ri--) {
-                count[ri][ci] += count[ri + 1][ci];
-                count[ri][ci] += count[ri][ci + 1];
+                calculateCount(count, ri, ci);
             }
             // Count top-left corner of the outer rectangle
-            count[t][l] += count[t + 1][l];
-            count[t][l] += count[t][l + 1];
+            calculateCount(count, t, l);
 
         } while (t != 0 || l != 0);
 
         return count[0][0];
+    }
+
+private:
+    inline void calculateCount(std::vector<std::vector<int>>& count, int r, int c) const
+    {
+        int& cell = count[r][c];
+        cell += count[r + 1][c];
+        cell += count[r][c + 1];
     }
 };
 

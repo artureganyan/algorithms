@@ -14,7 +14,7 @@ namespace unique_paths_2 {
 
 class Solution1 {
 public:
-    // Time: O(C(n + m, m)), Space: O(n + m), Recursion depth < n + m
+    // Time: O(C(n + m, m)), Space: O(n + m), Recursion depth <= n + m
     // n - number of rows, m - number of columns,
     // C(n + m, m) - binomial coefficient (n + m)! / (m! * n!)
     //

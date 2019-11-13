@@ -40,4 +40,5 @@
 //TEST(permutation_sequence);
 //TEST(rotate_list);
 //TEST(unique_paths);
-TEST(unique_paths_2);
+//TEST(unique_paths_2);
+TEST(minimum_path_sum);

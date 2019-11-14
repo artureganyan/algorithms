@@ -41,4 +41,5 @@
 //TEST(rotate_list);
 //TEST(unique_paths);
 //TEST(unique_paths_2);
-TEST(minimum_path_sum);
+//TEST(minimum_path_sum);
+TEST(simplify_path);

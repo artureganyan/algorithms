@@ -9,7 +9,8 @@ class Solution {
 public:
     // Time: O(n), Space: O(n), n - number of characters
     //
-    // Warning: This function allows any characters except 0.
+    // Note: The path can contain any characters except 0. It should start
+    // with "/", otherwise the function returns an empty string.
     //
     std::string run(const std::string& path)
     {

@@ -42,4 +42,5 @@
 //TEST(unique_paths);
 //TEST(unique_paths_2);
 //TEST(minimum_path_sum);
-TEST(simplify_path);
+//TEST(simplify_path);
+TEST(set_matrix_zeros);

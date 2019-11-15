@@ -217,4 +217,48 @@ bool compare_lists(Node* head, std::initializer_list<typename Traits::Value> val
     return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
 }
 
+
+// Matrix
+
+// The positive times means clockwise, the negative means counterclockwise
+template <typename T>
+std::vector<std::vector<T>> rotate(const std::vector<std::vector<T>>& matrix, int times = 1)
+{
+    if (!matrix.size() || !matrix[0].size())
+        return matrix;
+
+    times = times % 4;
+    if (!times)
+        return matrix;
+
+    if (times < 0)
+        times = 4 + times;
+
+    const int rows_count = matrix.size();
+    const int cols_count = matrix[0].size();
+
+    std::vector<std::vector<T>> result;
+
+    if (times == 1) {
+        result.resize(cols_count, std::vector<T>(rows_count, 0));
+        for (int r = 0; r < rows_count; r++)
+            for (int c = 0; c < cols_count; c++)
+                result[c][rows_count - r - 1] = matrix[r][c];
+
+    } else if (times == 2) {
+         result.resize(rows_count, std::vector<T>(cols_count, 0));
+         for (int r = 0; r < rows_count; r++)
+            for (int c = 0; c < cols_count; c++)
+                result[rows_count - r - 1][cols_count - c - 1] = matrix[r][c];
+
+    } else if (times == 3) {
+        result.resize(cols_count, std::vector<T>(rows_count, 0));
+        for (int r = 0; r < rows_count; r++)
+            for (int c = 0; c < cols_count; c++)
+                result[cols_count - c - 1][r] = matrix[r][c];
+    }
+
+    return result;
+}
+
 #endif

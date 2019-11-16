@@ -43,4 +43,5 @@
 //TEST(unique_paths_2);
 //TEST(minimum_path_sum);
 //TEST(simplify_path);
-TEST(set_matrix_zeros);
+//TEST(set_matrix_zeros);
+TEST(search_in_2d_matrix);

@@ -52,6 +52,11 @@ std::string to_string(const Container<T>& container)
     return s.str();
 }
 
+inline std::string to_string(bool value)
+{
+    return value ? "true" : "false";
+}
+
 
 // Set
 

@@ -124,7 +124,7 @@ public:
     }
 
 private:
-    inline void calculatePath(std::vector<std::vector<int>>& grid, int r, int c) const
+    void calculatePath(std::vector<std::vector<int>>& grid, int r, int c) const
     {
         int min_right = -1;
         int min_down  = -1;

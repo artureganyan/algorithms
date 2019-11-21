@@ -122,6 +122,19 @@ void test()
     ASSERT( compare_sets(Solution().run(4, 3), {{1, 2, 3}, {1, 2, 4}, {1, 3, 4}, {2, 3, 4}}) );
     ASSERT( compare_sets(Solution().run(4, 4), {{1, 2, 3, 4}}) );
     ASSERT( compare_sets(Solution().run(4, 5), {}) );
+
+    // Test performance
+    const int n = 15;
+    std::cout << "Test performance for n=1.." << n << ", k=1.." << n << std::endl;
+    clock_t start = clock();
+
+    for (int i = 1; i <= n; i++) {
+        for (int k = 1; k <= n; k++)
+            Solution().run(n, k);
+    }
+
+    double elapsed_secs = double(clock() - start) / CLOCKS_PER_SEC;
+    std::cout << "Elapsed: " << elapsed_secs << " seconds" << std::endl;
 }
 
 int main()

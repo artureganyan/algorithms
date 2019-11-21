@@ -4,7 +4,9 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+#include <limits>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 
@@ -80,21 +82,26 @@ inline bool compare_sets(const std::unordered_set<T>& set1, const std::unordered
 template <typename T>
 bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std::vector<T>>& set2)
 {
-    if (set1.size() != set2.size())
-        return false;
-
-    for (const auto& s1 : set1) {
-        bool found = false;
-        for (const auto& s2 : set2) {
-            if (compare_sets(s1, s2)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found)
+    auto compare = [](const auto& set1, const auto& set2)
+    {
+        if (set1.size() != set2.size())
             return false;
-    }
-    return true;
+
+        for (const auto& s1 : set1) {
+            bool found = false;
+            for (const auto& s2 : set2) {
+                if (compare_sets(s1, s2)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                return false;
+        }
+        return true;
+    };
+
+    return compare(set1, set2) && compare(set2, set1);
 }
 
 
@@ -265,5 +272,167 @@ std::vector<std::vector<T>> rotate(const std::vector<std::vector<T>>& matrix, in
 
     return result;
 }
+
+
+// OperationCounter
+//
+// This class helps to count different operations. Usage:
+//
+// OperationCounter counter;
+//
+// void function(int arg)
+// {
+//     OperationCounter::Call call = counter.addCall();
+//
+//     for (int i = 0; i < arg; i++) {
+//         std::vector<int> v1 = some_data;
+//         std::vector<int> v2 = v1;
+//         counter.addOperation("copy", v1.size() + v2.size());
+//     }
+//     counter.addOperation("iteration", arg);
+//
+//     if (arg > 0)
+//         function(arg - 1);
+// }
+//
+// function(5);
+//
+// std::cout << counter.toString() << std::endl;
+//
+// Note: The class is not thread-safe.
+
+class OperationCounter {
+public:
+    class Call {
+        friend class OperationCounter;
+
+    public:
+        Call(Call&& other)
+        {
+            c_ = other.c_;
+            other.c_ = nullptr;
+        }
+
+        ~Call()
+        {
+            if (c_)
+                c_->call_depth_--;
+        }
+
+    private:
+        Call(OperationCounter* counter)
+        {
+            c_ = counter;
+            if (!c_)
+                return;
+
+            c_->call_count_++;
+            c_->call_depth_++;
+            c_->call_depth_max_ = std::max(c_->call_depth_max_, c_->call_depth_);
+        }
+
+        OperationCounter* c_;
+    };
+
+    struct Count
+    {
+        Count() :
+            current(0),
+            min(std::numeric_limits<int>::max()),
+            max(std::numeric_limits<int>::min()) {}
+
+        int current;
+        int min;
+        int max;
+    };
+
+    typedef std::unordered_map<std::string /*name*/, Count> OperationMap;
+
+public:
+    OperationCounter()
+    {
+        reset();
+    }
+
+    void addOperation(const std::string& name, int count = 1)
+    {
+        setOperation(name, operation_count_[name].current + count);
+    }
+
+    void setOperation(const std::string& name, int count)
+    {
+        Count& c  = operation_count_[name];
+        c.current = count;
+        c.min     = std::min(c.min, c.current);
+        c.max     = std::max(c.max, c.current);
+    }
+
+    Count operationCount(const std::string& name) const
+    {
+        return operation_count_.at(name);
+    }
+
+    OperationMap allOperationCount() const
+    {
+        return operation_count_;
+    }
+
+    // Should be used as "Call call = counter.addCall()" at the beginning
+    // of the function, within its body scope.
+    Call addCall()
+    {
+        return Call(this);
+    }
+
+    int callCount() const
+    {
+        return call_count_;
+    }
+
+    int callDepth() const
+    {
+        return call_depth_;
+    }
+
+    int maxCallDepth() const
+    {
+        return call_depth_max_;
+    }
+
+    void reset()
+    {
+        operation_count_.clear();
+        call_count_     = 0;
+        call_depth_     = 0;
+        call_depth_max_ = 0;
+    }
+
+    std::string toString() const
+    {
+        std::stringstream s;
+
+        if (call_count_) {
+            s << "Call count: "     << call_count_ << std::endl;
+            s << "Max call depth: " << call_depth_max_ << std::endl;
+        }
+        for (auto item : operation_count_) {
+            const std::string& name  = item.first;
+            const Count&       count = item.second;
+            s << name << ": "
+              << count.current
+              << " (min=" << count.min
+              <<  " max=" << count.max
+              << ")" << std::endl;
+        }
+
+        return s.str();
+    }
+
+private:
+    OperationMap    operation_count_;
+    int             call_count_;
+    int             call_depth_;
+    int             call_depth_max_;
+};
 
 #endif

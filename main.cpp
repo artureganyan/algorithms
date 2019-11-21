@@ -44,4 +44,7 @@
 //TEST(minimum_path_sum);
 //TEST(simplify_path);
 //TEST(set_matrix_zeros);
-TEST(search_in_2d_matrix);
+//TEST(search_in_2d_matrix);
+//TEST(sort_colors);
+//TEST(combinations);
+TEST(subsets);

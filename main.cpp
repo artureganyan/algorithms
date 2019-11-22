@@ -47,4 +47,5 @@
 //TEST(search_in_2d_matrix);
 //TEST(sort_colors);
 //TEST(combinations);
-TEST(subsets);
+//TEST(subsets);
+TEST(word_search);

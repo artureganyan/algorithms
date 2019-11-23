@@ -48,4 +48,5 @@
 //TEST(sort_colors);
 //TEST(combinations);
 //TEST(subsets);
-TEST(word_search);
+//TEST(word_search);
+TEST(remove_duplicates_from_sorted_array_2);

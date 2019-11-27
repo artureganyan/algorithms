@@ -1,6 +1,5 @@
 // Problem: https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
 
-#include <vector>
 #include "utils.h"
 
 namespace remove_duplicates_from_sorted_list_2 {

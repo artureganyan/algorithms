@@ -52,4 +52,5 @@
 //TEST(remove_duplicates_from_sorted_array_2);
 //TEST(search_in_rotated_array_2);
 //TEST(remove_duplicates_from_sorted_list_2);
-TEST(partition_list);
+//TEST(partition_list);
+TEST(gray_code);

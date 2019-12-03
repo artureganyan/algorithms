@@ -54,4 +54,5 @@
 //TEST(remove_duplicates_from_sorted_list_2);
 //TEST(partition_list);
 //TEST(gray_code);
-TEST(subsets_2);
+//TEST(subsets_2);
+TEST(decode_ways);

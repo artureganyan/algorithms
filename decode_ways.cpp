@@ -5,7 +5,9 @@
 
 namespace decode_ways {
 
-class Solution {
+// Recursive solution
+
+class Solution1 {
 public:
     // Returns the number of possible decodings for the given string,
     // assuming the following map: '1' -> 'A', '2' -> 'B', ..., '26' -> 'Z'.
@@ -13,7 +15,7 @@ public:
     // empty, returns 1. If it contains code '0' (e.g. "01", "100", "1001"),
     // returns 0.
     //
-    // Time: O(2^n), Space: O(n), Recursion depth: n
+    // Time: O(2^n), Space: O(n), Recursion depth: n, n - number of characters
     //
     // Note:
     // The best case is when there are no 2-digit codes, resulting in O(n)
@@ -54,7 +56,69 @@ private:
     }
 };
 
-int main()
+
+// Iterative solution
+
+class Solution2 {
+public:
+    // Returns the number of possible decodings for the given string,
+    // assuming the following map: '1' -> 'A', '2' -> 'B', ..., '26' -> 'Z'.
+    // The string must contain only characters from '0' to '9'. If it's
+    // empty, returns 1. If it contains code '0' (e.g. "01", "100", "1001"),
+    // returns 0.
+    //
+    // Time: O(n), Space: O(1), n - number of characters
+    //
+    int run(const std::string& encoded)
+    {
+        // Idea:
+        // If we decode position i as 1-digit code, the number of decodings
+        // for substring [i, end) is the same as for [i+1, end). If we decode
+        // it as 2-digit code, the number is the same as for [i+2, end). If
+        // we can't decode it, the number is 0. The result for the whole string
+        // can be calculated iteratively from the results for position n-1,
+        // n-2, ..., 0:
+        //
+        // result(i) = result(i+1) + result(i+2) if [i, i+1] is a valid 2-digit code, else
+        //             result(i+1)               if [i] is a valid 1-digit code, else
+        //             0
+        //
+        // (note that if [i, i+1] is a valid 2-digit code, than [i] is a valid
+        // 1-digit code, so we use result(i+1) in both cases)
+
+        if (encoded.size() == 0)
+            return 1;
+
+        if (encoded.size() == 1)
+            return encoded[0] != '0';
+
+        int result_i   = 0;
+        int result_i_1 = encoded.back() != '0';
+        int result_i_2 = 1;
+
+        for (int i = encoded.size() - 2; i >= 0; i--) {
+            const char c1 = encoded[i];
+            if (c1 != '0') {
+                const char c2   = encoded[i + 1];
+                const int  code = (c1 - '0') * 10 + (c2 - '0');
+                if (code <= 26)
+                    result_i = result_i_1 + result_i_2; else
+                    result_i = result_i_1;
+            } else {
+                result_i = 0;
+            }
+
+            result_i_2 = result_i_1;
+            result_i_1 = result_i;
+        }
+
+        return result_i;
+    }
+};
+
+
+template <typename Solution>
+void test()
 {
     ASSERT( Solution().run("") == 1 );
     ASSERT( Solution().run("0") == 0 );
@@ -92,6 +156,12 @@ int main()
     ASSERT( Solution().run("1100") == 0 );
     ASSERT( Solution().run("1110") == 2 );
     ASSERT( Solution().run("1111") == 5 );
+}
+
+int main()
+{
+    test<Solution1>();
+    test<Solution2>();
 
     return 0;
 }

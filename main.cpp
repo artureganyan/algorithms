@@ -55,4 +55,5 @@
 //TEST(partition_list);
 //TEST(gray_code);
 //TEST(subsets_2);
-TEST(decode_ways);
+//TEST(decode_ways);
+TEST(add_two_numbers);

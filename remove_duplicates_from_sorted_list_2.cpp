@@ -21,11 +21,12 @@ public:
         if (!head)
             return nullptr;
 
-        int duplicates_count = 0;
-        int prev_value = head->val;
-
         ListNode* before_duplicate = nullptr;
-        ListNode* node = head;
+        int       duplicates_count = 0;
+
+        ListNode* node       = head;
+        int       prev_value = head->val;
+
         do {
             node = node->next;
 
@@ -71,8 +72,10 @@ void test(std::initializer_list<int> list, std::initializer_list<int> expected)
 {
     ListNode* head = create_list<ListNode>(list);
 
-    ASSERT_EX( compare_lists(Solution().run(head), expected),
+    ASSERT_EX( compare_lists(head = Solution().run(head), expected),
                to_string(list) + " -> " + to_string(expected) );
+
+    destroy_list(head);
 }
 
 int main()

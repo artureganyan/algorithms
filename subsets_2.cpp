@@ -20,15 +20,15 @@ public:
     //
     std::vector<std::vector<int>> run(std::vector<int>& nums)
     {
-        std::vector<std::vector<int>> result;
-
         std::sort(nums.begin(), nums.end());
-        generateSubsets(result, nums, 0);
 
+        std::vector<std::vector<int>> result;
+        generateSubsets(result, nums, 0);
         return result;
     }
 
 private:
+    // Note: The nums must be sorted
     void generateSubsets(std::vector<std::vector<int>>& result, const std::vector<int>& nums, int nums_begin) const
     {
         result.push_back({});

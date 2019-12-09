@@ -57,4 +57,5 @@
 //TEST(subsets_2);
 //TEST(decode_ways);
 //TEST(add_two_numbers);
-TEST(reverse_linked_list_2);
+//TEST(reverse_linked_list_2);
+TEST(restore_ip_addresses);

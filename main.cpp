@@ -58,4 +58,5 @@
 //TEST(decode_ways);
 //TEST(add_two_numbers);
 //TEST(reverse_linked_list_2);
-TEST(restore_ip_addresses);
+//TEST(restore_ip_addresses);
+TEST(binary_tree_inorder_traversal);

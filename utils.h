@@ -20,7 +20,8 @@
             std::cerr << "Failed: " << (message) << std::endl;      \
             std::abort();                                           \
         }                                                           \
-    }
+    }                                                               \
+    ((void)"Semicolon is required")
 
 #define ASSERT(condition) \
     ASSERT_EX(condition, #condition)
@@ -117,9 +118,21 @@ public:
         return node ? node->next : nullptr;
     }
 
-    static int value(Node* node)
+    static void setNext(Node* node, Node* next)
+    {
+        if (node)
+            node->next = next;
+    }
+
+    static Value value(const Node* node)
     {
         return node ? node->val : 0;
+    }
+
+    static void setValue(Node* node, const Value& value)
+    {
+        if (node)
+            node->val = value;
     }
 
     static Node* create(const Value& value)
@@ -127,12 +140,23 @@ public:
         return new Node{value};
     }
 
-    static void destroy(Node* node)
+    static void destroy(const Node* node)
     {
         if (node)
             delete node;
     }
 };
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+void destroy_list(Node* head)
+{
+    Node* node = head;
+    while (node) {
+        Node* next = Traits::next(node);
+        Traits::destroy(node);
+        node = next;
+    }
+}
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
 class TemporaryList {
@@ -141,12 +165,7 @@ public:
 
     ~TemporaryList()
     {
-        Node* node = head_;
-        while (node) {
-            Node* next = node->next;
-            Traits::destroy(node);
-            node = next;
-        }
+        destroy_list<Node, Traits>(head_);
     }
 
     operator Node*() const
@@ -166,9 +185,26 @@ std::vector<typename Traits::Value> list_to_vector(Node* head)
     Node* node = head;
     while (node) {
         result.push_back(Traits::value(node));
-        node = node->next;
+        node = Traits::next(node);
     }
 
+    return result;
+}
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+std::string list_to_string(Node* head)
+{
+    std::string result = "{";
+
+    Node* node = head;
+    while (node) {
+        if (result.size())
+            result += ", ";
+        result += to_string(Traits::value(node));
+        node = Traits::next(node);
+    }
+
+    result += "}";
     return result;
 }
 
@@ -180,23 +216,12 @@ Node* create_list(std::initializer_list<typename Traits::Value> values)
     for (const typename Traits::Value& value : values) {
         Node* node = Traits::create(value);
         if (prev)
-            prev->next = node;
+            Traits::setNext(prev, node);
         prev = node;
         if (!head)
             head = node;
     }
     return head;
-}
-
-template <typename Node, typename Traits = DefaultListTraits<Node>>
-void destroy_list(Node* head)
-{
-    Node* node = head;
-    while (node) {
-        Node* next = node->next;
-        Traits::destroy(node);
-        node = next;
-    }
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
@@ -228,6 +253,102 @@ bool compare_lists(Node* head, std::initializer_list<typename Traits::Value> val
 {
     return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
 }
+
+
+// Tree
+
+template <typename Node>
+class DefaultTreeTraits {
+public:
+    typedef decltype(Node::val) Value;
+
+    enum {
+        ChildCount = 2
+    };
+
+    static Node* child(Node* node, int index)
+    {
+        if (!node)
+            return nullptr;
+
+        return getChildRef(node, index);
+    }
+
+    static void setChild(Node* node, int index, Node* child)
+    {
+        if (node)
+            getChildRef(node, index) = child;
+    }
+
+    static Value value(const Node* node)
+    {
+        return node ? node->val : 0;
+    }
+
+    static void setValue(Node* node, const Value& value)
+    {
+        if (node)
+            node->val = value;
+    }
+
+    static Node* create(const Value& value)
+    {
+        return new Node{value};
+    }
+
+    static void destroy(const Node* node)
+    {
+        if (node)
+            delete node;
+    }
+
+private:
+    static Node*& getChildRef(Node* node, int index)
+    {
+        if (!node)
+            throw std::runtime_error("DefaultTreeTraits: Null node");
+
+        if (index < 0 || index >= ChildCount)
+            throw std::out_of_range("DefaultTreeTraits: Incorrect child index");
+
+        if (index == 0)
+            return node->left;
+
+        if (index == 1)
+            return node->right;
+    }
+};
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+void delete_tree(Node* root)
+{
+    if (!root)
+        return;
+
+    for (int i = 0; i < Traits::ChildCount; i++)
+        delete_tree(Traits::child(root, i));
+
+    Traits::destroy(root);
+}
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+class TemporaryTree {
+public:
+    TemporaryTree(Node* root) : root_(root) {}
+
+    ~TemporaryTree()
+    {
+        delete_tree<Node, Traits>(root_);
+    }
+
+    operator Node*() const
+    {
+        return root_;
+    }
+
+private:
+    Node* root_;
+};
 
 
 // Matrix

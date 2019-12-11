@@ -59,4 +59,5 @@
 //TEST(add_two_numbers);
 //TEST(reverse_linked_list_2);
 //TEST(restore_ip_addresses);
-TEST(binary_tree_inorder_traversal);
+//TEST(binary_tree_inorder_traversal);
+TEST(unique_binary_search_trees_2);

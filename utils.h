@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 
 // Test
@@ -63,25 +64,8 @@ inline std::string to_string(bool value)
 
 // Set
 
-template <template <typename, typename...> class Container, typename T>
-bool compare_sets(const Container<T>& set1, const Container<T>& set2)
-{
-    if (set1.size() != set2.size())
-        return false;
-
-    std::unordered_set<T> s1(set1.begin(), set1.end());
-    std::unordered_set<T> s2(set2.begin(), set2.end());
-    return s1 == s2;
-}
-
-template <typename T>
-inline bool compare_sets(const std::unordered_set<T>& set1, const std::unordered_set<T>& set2)
-{
-    return set1 == set2;
-}
-
-template <typename T>
-bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std::vector<T>>& set2)
+template <typename Container, typename Compare = std::equal_to<typename Container::value_type>>
+bool compare_sets(const Container& set1, const Container& set2)
 {
     auto compare = [](const auto& set1, const auto& set2)
     {
@@ -91,7 +75,7 @@ bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std
         for (const auto& s1 : set1) {
             bool found = false;
             for (const auto& s2 : set2) {
-                if (compare_sets(s1, s2)) {
+                if (Compare()(s1, s2)) {
                     found = true;
                     break;
                 }
@@ -103,6 +87,21 @@ bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std
     };
 
     return compare(set1, set2) && compare(set2, set1);
+}
+
+template <typename Container, typename Compare = std::equal_to<typename Container::value_type>>
+struct compare_sets_functor
+{
+    bool operator ()(const Container& set1, const Container& set2) const
+    {
+        return compare_sets<Container, Compare>(set1, set2);
+    }
+};
+
+template <typename T, typename Compare = std::equal_to<T>>
+bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std::vector<T>>& set2)
+{
+    return compare_sets<decltype(set1), compare_sets_functor<std::vector<T>, Compare>>(set1, set2);
 }
 
 
@@ -320,15 +319,43 @@ private:
 };
 
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
-void delete_tree(Node* root)
+void destroy_tree(Node* root)
 {
     if (!root)
         return;
 
     for (int i = 0; i < Traits::ChildCount; i++)
-        delete_tree(Traits::child(root, i));
+        destroy_tree(Traits::child(root, i));
 
     Traits::destroy(root);
+}
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+void get_tree_nodes(Node* tree, std::vector<Node*>& nodes)
+{
+    if (!tree)
+        return;
+
+    nodes.push_back(tree);
+
+    for (int i = 0; i < Traits::ChildCount; i++)
+        get_tree_nodes(Traits::child(tree, i), nodes);
+}
+
+// Destroys trees even if they contain shared nodes (i.e. if one node is
+// referenced by multiple trees)
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+void destroy_trees(const std::vector<Node*>& trees)
+{
+    std::vector<Node*> nodes;
+    for (auto tree : trees)
+        get_tree_nodes(tree, nodes);
+
+    std::sort(nodes.begin(), nodes.end());
+    nodes.erase(std::unique(nodes.begin(), nodes.end()), nodes.end());
+
+    for (auto node : nodes)
+        Traits::destroy(node);
 }
 
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
@@ -338,7 +365,7 @@ public:
 
     ~TemporaryTree()
     {
-        delete_tree<Node, Traits>(root_);
+        destroy_tree<Node, Traits>(root_);
     }
 
     operator Node*() const
@@ -349,6 +376,66 @@ public:
 private:
     Node* root_;
 };
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+bool compare_trees(const Node* tree1, const Node* tree2)
+{
+    if (!tree1 || !tree2)
+        return tree1 == tree2;
+
+    if (tree1->val != tree2->val)
+        return false;
+
+    return compare_trees(tree1->left,  tree2->left) &&
+           compare_trees(tree1->right, tree2->right);
+}
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+struct compare_trees_functor
+{
+    bool operator ()(const Node* tree1, const Node* tree2) const
+    {
+        return compare_trees(tree1, tree2);
+    }
+};
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+std::string tree_to_string_impl(Node* tree, const std::string& indent, const std::string& null, bool is_root)
+{
+    std::stringstream result;
+
+    if (!is_root)
+        result << indent;
+
+    if (tree) {
+        result << to_string(tree->val) << std::endl;
+
+        if (tree->left || tree->right) {
+            std::string next_indent = indent;
+            if (!is_root)
+                next_indent += indent;
+
+            result << tree_to_string_impl(tree->left,  next_indent, null, false);
+            result << tree_to_string_impl(tree->right, next_indent, null, false);
+        }
+    } else {
+        result << null << std::endl;
+    }
+
+    return result.str();
+}
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+std::string tree_to_string_ex(Node* tree, const std::string& indent, const std::string& null)
+{
+    return tree_to_string_impl(tree, indent, null, true);
+}
+
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+std::string tree_to_string(Node* tree)
+{
+    return tree_to_string_ex(tree, "    ", "null");
+}
 
 
 // Matrix

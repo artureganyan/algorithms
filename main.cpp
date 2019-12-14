@@ -62,4 +62,5 @@
 //TEST(binary_tree_inorder_traversal);
 //TEST(unique_binary_search_trees_2);
 //TEST(unique_binary_search_trees);
-TEST(validate_binary_search_tree);
+//TEST(validate_binary_search_tree);
+TEST(binary_tree_level_order_traversal);

@@ -1,5 +1,6 @@
 // Problem: https://leetcode.com/problems/validate-binary-search-tree/
 
+#include <limits>
 #include "utils.h"
 
 namespace validate_binary_search_tree {
@@ -23,7 +24,7 @@ public:
     }
 
 private:
-    bool isValid(TreeNode* root, int min, int max)
+    bool isValid(TreeNode* root, int min, int max) const
     {
         if (!root)
             return true;

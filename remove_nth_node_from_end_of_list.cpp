@@ -9,7 +9,7 @@ struct ListNode {
     ListNode *next;
 };
 
-class Solution {
+class Solution1 {
 public:
     // Time: O(n), Space: O(1)
     //
@@ -43,12 +43,18 @@ public:
 
         return head;
     }
+};
 
+
+// Does 2 passes
+
+class Solution2 {
+public:
     // Time: O(n), Space: O(1)
     //
     // Note: n must be > 0 (n = 1 means the last node)
     //
-    ListNode* run_2passes(ListNode* head, int n)
+    ListNode* run(ListNode* head, int n)
     {
         if (!head || n <= 0)
             return nullptr;
@@ -88,21 +94,24 @@ public:
     }
 };
 
+
+template <typename Solution>
+void test()
+{
+    ListNode *head = new ListNode{0, new ListNode{1, new ListNode{2, new ListNode{3, 0}}}};
+    ASSERT(compare_lists(Solution().run(head, 5), {}));
+    ASSERT(compare_lists(Solution().run(head, 0), {}));
+    ASSERT(compare_lists(head = Solution().run(head, 4), {1, 2, 3}));
+    ASSERT(compare_lists(head = Solution().run(head, 1), {1, 2}));
+    ASSERT(compare_lists(head = Solution().run(head, 2), {2}));
+    ASSERT(compare_lists(head = Solution().run(head, 1), {}));
+    ASSERT(compare_lists(Solution().run(nullptr, 0), {}));
+}
+
 int main()
 {
-    auto methods = {&Solution::run, &Solution::run_2passes};
-    std::vector<int> v;
-
-    for (auto method : methods) {
-        ListNode *head = new ListNode{0, new ListNode{1, new ListNode{2, new ListNode{3, 0}}}};
-        ASSERT(compare_lists((Solution().*method)(head, 5), {}));
-        ASSERT(compare_lists((Solution().*method)(head, 0), {}));
-        ASSERT(compare_lists(head = (Solution().*method)(head, 4), {1, 2, 3}));
-        ASSERT(compare_lists(head = (Solution().*method)(head, 1), {1, 2}));
-        ASSERT(compare_lists(head = (Solution().*method)(head, 2), {2}));
-        ASSERT(compare_lists(head = (Solution().*method)(head, 1), {}));
-        ASSERT(compare_lists((Solution().*method)(nullptr, 0), {}));
-    }
+    test<Solution1>();
+    test<Solution2>();
 
     return 0;
 }

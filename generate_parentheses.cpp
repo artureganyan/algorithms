@@ -5,21 +5,19 @@
 
 namespace generate_parentheses {
 
-class Solution
-{
+class Solution1 {
 public:
-    // Idea:
-    // If {n} is a set of all combinations for n parentheses, it includes the following sets:
-    // "()" + {n - 1}
-    // "({1})" + {n - 2}
-    // "({2})" + {n - 3}
-    // ...
-    // "({n - 1})" + {1}
-    //
     // Note: for n = 0 returns {""}
-    //
     std::vector<std::string> run(int n)
     {
+        // Idea:
+        // If {n} is a set of all combinations for n parentheses, it includes the following sets:
+        // "()" + {n - 1}
+        // "({1})" + {n - 2}
+        // "({2})" + {n - 3}
+        // ...
+        // "({n - 1})" + {1}
+
         if (n == 0)
             return {std::string()};
 
@@ -37,7 +35,21 @@ public:
 
         return result;
     }
+};
 
+
+class Solution2 {
+public:
+    // Note: for n = 0 returns {""}
+    std::vector<std::string> run(int n)
+    {
+        std::vector<std::string> result;
+        std::string s;
+        generate(result, s, n, 0);
+        return result;
+    }
+
+private:
     // Idea:
     // At each step, we have current string, n open parentheses and m close parentheses.
     // And we can do only 3 next steps:
@@ -68,30 +80,23 @@ public:
             generate(result, next_str, count_open, count_close - 1);
         }
     }
-
-    // Note: for n = 0 returns {""}
-    //
-    std::vector<std::string> run2(int n)
-    {
-        std::vector<std::string> result;
-        std::string s;
-        generate(result, s, n, 0);
-        return result;
-    }
-
 };
+
+
+template <typename Solution>
+void test()
+{
+    ASSERT(compare_sets(Solution().run(0), {""}));
+    ASSERT(compare_sets(Solution().run(1), {"()"}));
+    ASSERT(compare_sets(Solution().run(2), {"()()", "(())"}));
+    ASSERT(compare_sets(Solution().run(3), {"((()))", "(()())", "(())()", "()(())", "()()()"}));
+    ASSERT(compare_sets(Solution().run(4), {"(((())))", "((()()))", "((())())", "((()))()", "(()(()))", "(()()())", "(()())()", "(())(())", "(())()()", "()((()))", "()(()())", "()(())()", "()()(())", "()()()()"}));
+}
 
 int main()
 {
-    auto methods = {&Solution::run, &Solution::run2};
-
-    for (auto method : methods) {
-        ASSERT(compare_sets((Solution().*method)(0), {""}));
-        ASSERT(compare_sets((Solution().*method)(1), {"()"}));
-        ASSERT(compare_sets((Solution().*method)(2), {"()()", "(())"}));
-        ASSERT(compare_sets((Solution().*method)(3), {"((()))", "(()())", "(())()", "()(())", "()()()"}));
-        ASSERT(compare_sets((Solution().*method)(4), {"(((())))", "((()()))", "((())())", "((()))()", "(()(()))", "(()()())", "(()())()", "(())(())", "(())()()", "()((()))", "()(()())", "()(())()", "()()(())", "()()()()"}));
-    }
+    test<Solution1>();
+    test<Solution2>();
 
     return 0;
 }

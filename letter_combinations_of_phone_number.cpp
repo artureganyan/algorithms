@@ -78,6 +78,7 @@ int main()
     ASSERT(compare_sets(Solution().run("0"), std::vector<std::string>({""})));
     ASSERT(compare_sets(Solution().run("01"), std::vector<std::string>({""})));
     ASSERT(compare_sets(Solution().run("1x2"), std::vector<std::string>()));
+
     return 0;
 }
 

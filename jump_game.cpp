@@ -48,6 +48,7 @@ int main()
     ASSERT(Solution().run(v = {1, 1, 0}) == true);
     ASSERT(Solution().run(v = {2, 3, 1, 1, 4}) == true);
     ASSERT(Solution().run(v = {3, 2, 1, 0, 4}) == false);
+
     return 0;
 }
 

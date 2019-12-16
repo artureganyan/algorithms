@@ -5,8 +5,7 @@
 
 namespace zig_zag_conversion {
 
-class Solution
-{
+class Solution {
 public:
     // Time: O(n), Space: O(n) for result, O(1) for processing
     //
@@ -63,6 +62,7 @@ int main()
     ASSERT(Solution().run("123456789ABCD", 0) == "");
     ASSERT(Solution().run("", 1) == "");
     ASSERT(Solution().run("", 2) == "");
+
     return 0;
 }
 

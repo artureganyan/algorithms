@@ -5,7 +5,7 @@
 
 namespace integer_to_roman {
 
-class Solution {
+class Solution1 {
 public:
     // Time: O(n), Space: O(n), n - number of digits
     std::string run(int num)
@@ -48,12 +48,15 @@ public:
 
         return result;
     }
+};
 
+
+// A bit more verbose version
+
+class Solution2 {
+public:
     // Time: O(n), Space: O(n), n - number of digits
-    //
-    // A bit more verbose version
-    //
-    std::string run2(int num)
+    std::string run(int num)
     {
         if (num <= 0 || num > 3999)
             return std::string();
@@ -96,28 +99,33 @@ public:
     }
 };
 
+
+template <typename Solution>
+void test()
+{
+    ASSERT(Solution().run(1) == "I");
+    ASSERT(Solution().run(3) == "III");
+    ASSERT(Solution().run(4) == "IV");
+    ASSERT(Solution().run(5) == "V");
+    ASSERT(Solution().run(8) == "VIII");
+    ASSERT(Solution().run(9) == "IX");
+    ASSERT(Solution().run(10) == "X");
+    ASSERT(Solution().run(49) == "XLIX");
+    ASSERT(Solution().run(50) == "L");
+    ASSERT(Solution().run(58) == "LVIII");
+    ASSERT(Solution().run(1994) == "MCMXCIV");
+    ASSERT(Solution().run(2001) == "MMI");
+    ASSERT(Solution().run(3999) == "MMMCMXCIX");
+    ASSERT(Solution().run(-1) == "");
+    ASSERT(Solution().run(0) == "");
+    ASSERT(Solution().run(4000) == "");
+}
+
 int main()
 {
-    auto methods = {&Solution::run, &Solution::run2};
+    test<Solution1>();
+    test<Solution2>();
 
-    for (auto method : methods) {
-        ASSERT((Solution().*method)(1) == "I");
-        ASSERT((Solution().*method)(3) == "III");
-        ASSERT((Solution().*method)(4) == "IV");
-        ASSERT((Solution().*method)(5) == "V");
-        ASSERT((Solution().*method)(8) == "VIII");
-        ASSERT((Solution().*method)(9) == "IX");
-        ASSERT((Solution().*method)(10) == "X");
-        ASSERT((Solution().*method)(49) == "XLIX");
-        ASSERT((Solution().*method)(50) == "L");
-        ASSERT((Solution().*method)(58) == "LVIII");
-        ASSERT((Solution().*method)(1994) == "MCMXCIV");
-        ASSERT((Solution().*method)(2001) == "MMI");
-        ASSERT((Solution().*method)(3999) == "MMMCMXCIX");
-        ASSERT((Solution().*method)(-1) == "");
-        ASSERT((Solution().*method)(0) == "");
-        ASSERT((Solution().*method)(4000) == "");
-    }
     return 0;
 }
 

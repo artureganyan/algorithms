@@ -6,8 +6,7 @@
 
 namespace container_with_most_water {
 
-class Solution
-{
+class Solution {
 public:
     // Time: O(n), Space: O(1)
     int run(std::vector<int>& heights)
@@ -41,6 +40,7 @@ int main()
     ASSERT(Solution().run(v = {1, 1}) == 1);
     ASSERT(Solution().run(v = {1, 5, 8, 5, 1}) == 10);
     ASSERT(Solution().run(v = {1, 8, 6, 2, 5, 4, 8, 3, 7}) == 49);
+
     return 0;
 }
 

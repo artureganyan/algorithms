@@ -124,6 +124,8 @@ int main()
 
     double elapsed_secs = double(clock() - start) / CLOCKS_PER_SEC;
     std::cout << "Elapsed: " << elapsed_secs << " seconds" << std::endl;
+
+    return 0;
 }
 
 }

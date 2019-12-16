@@ -57,6 +57,7 @@ int main()
     ASSERT(( Solution().run(v = {1, 1, 1}), v == std::vector<int>{1, 1, 1} ));
     ASSERT(( Solution().run(v = {1, 1, 2}), v == std::vector<int>{1, 2, 1} ));
     ASSERT(( Solution().run(v = {1, 2, 1}), v == std::vector<int>{2, 1, 1} ));
+
     return 0;
 }
 

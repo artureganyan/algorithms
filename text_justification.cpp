@@ -8,8 +8,7 @@
 
 namespace text_justification {
 
-class Solution
-{
+class Solution {
 private:
     static const char CHAR_SPACE = ' ';
 
@@ -116,6 +115,7 @@ int main()
     ASSERT(( Solution().run(v = {"test", "abc"}, 10) == std::vector<std::string>{"test abc  "} ));
     ASSERT(( Solution().run(v = {"test", "abc", "other"}, 10) == std::vector<std::string>{"test   abc", "other     "} ));
     ASSERT(( Solution().run(v = {"1234567890", "1234567890"}, 10) == std::vector<std::string>{"1234567890", "1234567890"} ));
+
     return 0;
 }
 

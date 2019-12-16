@@ -7,8 +7,7 @@
 
 namespace three_sum {
 
-class Solution
-{
+class Solution {
 private:
     struct Triple
     {
@@ -92,6 +91,7 @@ int main()
     ASSERT(compare_sets(Solution().run({0, 0, 0, 0}), {{0, 0, 0}}));
     ASSERT(compare_sets(Solution().run({2, -2, 1}), {}));
     ASSERT(compare_sets(Solution().run({1, 1, -2, 1, 1, -2}), {{1, 1, -2}}) );
+
     return 0;
 }
 

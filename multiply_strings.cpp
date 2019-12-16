@@ -74,6 +74,7 @@ int main()
     ASSERT(test_symmetrical("123", "1", "123"));
     ASSERT(test_symmetrical("123", "100", "12300"));
     ASSERT(test_symmetrical("1234567890", "1234567890", "1524157875019052100"));
+
     return 0;
 }
 

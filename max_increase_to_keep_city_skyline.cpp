@@ -5,12 +5,11 @@
 
 namespace max_increase_to_keep_city_skyline {
 
-class Solution
-{
+class Solution {
 public:
-    // Time: O(n^2), Space: O(1), n = width and height of grid
+    // Time: O(n^2), Space: O(1), n - width and height of the grid
     //
-    // grid must be a square
+    // Note: The grid must be a square.
     //
     int run(const std::vector<std::vector<int>>& grid)
     {

@@ -9,8 +9,8 @@ struct ListNode {
     ListNode *next;
 };
 
-class Solution
-{
+
+class Solution1 {
 public:
     // Time: O(n), Space: O(1)
     ListNode* run(ListNode* head)
@@ -38,12 +38,15 @@ public:
 
         return result;
     }
+};
 
-    // Probably more straightforward way.
-    //
+
+// Probably more straightforward way
+
+class Solution2 {
+public:
     // Time: O(n), Space: O(1)
-    //
-    ListNode* run2(ListNode* head)
+    ListNode* run(ListNode* head)
     {
         if (!head)
            return nullptr;
@@ -82,17 +85,21 @@ public:
     }
 };
 
+template <typename Solution>
+void test()
+{
+    ASSERT(compare_lists(Solution().run(create_temp_list<ListNode>({1, 2, 3, 4})), {2, 1, 4, 3}));
+    ASSERT(compare_lists(Solution().run(create_temp_list<ListNode>({1})), {1}));
+    ASSERT(compare_lists(Solution().run(create_temp_list<ListNode>({1, 2})), {2, 1}));
+    ASSERT(compare_lists(Solution().run(create_temp_list<ListNode>({1, 2, 3})), {2, 1, 3}));
+    ASSERT(compare_lists(Solution().run(nullptr), {}));
+}
+
 int main()
 {
-    auto methods = {&Solution::run, &Solution::run2};
+    test<Solution1>();
+    test<Solution2>();
 
-    for (auto method : methods) {
-        ASSERT(compare_lists((Solution().*method)(create_temp_list<ListNode>({1, 2, 3, 4})), {2, 1, 4, 3}));
-        ASSERT(compare_lists((Solution().*method)(create_temp_list<ListNode>({1})), {1}));
-        ASSERT(compare_lists((Solution().*method)(create_temp_list<ListNode>({1, 2})), {2, 1}));
-        ASSERT(compare_lists((Solution().*method)(create_temp_list<ListNode>({1, 2, 3})), {2, 1, 3}));
-        ASSERT(compare_lists((Solution().*method)(nullptr), {}));
-    }
     return 0;
 }
 

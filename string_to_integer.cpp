@@ -6,12 +6,11 @@
 
 namespace string_to_integer {
 
-class Solution
-{
+class Solution {
 public:
     // Time: O(n), Space: O(1)
     //
-    // Leading spaces and trailing non-numeric characters are ignored.
+    // Note: Leading spaces and trailing non-numeric characters are ignored.
     //
     int run(std::string s)
     {
@@ -105,6 +104,7 @@ int main()
     ASSERT(Solution().run("-10000000000") == -2147483648);
     ASSERT(Solution().run("00002147483647") == +2147483647);
     ASSERT(Solution().run("-00002147483648") == -2147483648);
+
     return 0;
 }
 

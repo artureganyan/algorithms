@@ -6,8 +6,7 @@
 
 namespace longest_substring_without_repeating_characters {
 
-class Solution
-{
+class Solution {
 public:
     // Time: O(n), Space: O(1)
     int run(std::string s)
@@ -41,6 +40,7 @@ int main()
     ASSERT(Solution().run("abcab") == 3);
     ASSERT(Solution().run("abcabxycbbztore") == 6);
     ASSERT(Solution().run("pwwket") == 4);
+
     return 0;
 }
 

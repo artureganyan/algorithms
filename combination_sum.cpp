@@ -147,6 +147,7 @@ int main()
 {
     test<Solution1>();
     test<Solution2>();
+
     return 0;
 }
 

@@ -79,7 +79,8 @@ ADD_TEST(unique_binary_search_trees_2);
 ADD_TEST(unique_binary_search_trees);
 ADD_TEST(validate_binary_search_tree);
 ADD_TEST(binary_tree_level_order_traversal);
-*/
 ADD_TEST(binary_tree_zigzag_level_order_traversal);
+*/
+ADD_TEST(construct_binary_tree_from_preorder_and_inorder_traversal);
 
 RUN_TESTS();

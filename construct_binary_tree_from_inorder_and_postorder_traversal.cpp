@@ -1,10 +1,10 @@
-// Problem: https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+// Problem: https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
 
 #include <vector>
 #include <unordered_map>
 #include "utils.h"
 
-namespace construct_binary_tree_from_preorder_and_inorder_traversal {
+namespace construct_binary_tree_from_inorder_and_postorder_traversal {
 
 struct TreeNode {
     int val;
@@ -18,26 +18,26 @@ public:
     //
     // Time: O(n), Space: O(n), Recursion depth <= n + 2, n - number of nodes
     //
-    TreeNode* run(const std::vector<int>& preorder, const std::vector<int>& inorder)
+    TreeNode* run(const std::vector<int>& inorder, const std::vector<int>& postorder)
     {
-        if (!preorder.size() || !inorder.size())
+        if (!postorder.size() || !inorder.size())
             return nullptr;
 
-        if (preorder.size() != inorder.size())
-            throw std::runtime_error("Preorder and inorder traversals do not match");
+        if (postorder.size() != inorder.size())
+            throw std::runtime_error("Postorder and inorder traversals do not match");
 
         inorder_map_.clear();
         for (auto i = inorder.cbegin(); i != inorder.cend(); i++)
             inorder_map_[*i] = i;
 
-        auto preorder_begin = preorder.cbegin();
-        return restoreTree(preorder_begin, preorder.end(), inorder.begin(), inorder.end());
+        auto postorder_end = postorder.cend();
+        return restoreTree(postorder.begin(), postorder_end, inorder.begin(), inorder.end());
     }
 
 private:
     TreeNode* restoreTree(
-              std::vector<int>::const_iterator& preorder_begin,
-        const std::vector<int>::const_iterator& preorder_end,
+        const std::vector<int>::const_iterator& postorder_begin,
+              std::vector<int>::const_iterator& postorder_end,
         const std::vector<int>::const_iterator& inorder_begin,
         const std::vector<int>::const_iterator& inorder_end) const
     {
@@ -63,16 +63,16 @@ private:
         //    For to: Recursively restore the right subtree with i=i-1, ti=ti[r+1, end),
         //    and then the left subtree with i=i-1 and ti[1, r-1].
 
-        if (preorder_begin == preorder_end || inorder_begin == inorder_end)
+        if (postorder_begin == postorder_end || inorder_begin == inorder_end)
             return nullptr;
 
-        const int root_value = *(preorder_begin++);
+        const int root_value = *(--postorder_end);
         TreeNode* root       = new TreeNode{root_value, nullptr, nullptr};
 
         auto inorder_root = inorder_map_.at(root_value);
 
-        root->left  = restoreTree(preorder_begin, preorder_end, inorder_begin, inorder_root);
-        root->right = restoreTree(preorder_begin, preorder_end, ++inorder_root, inorder_end);
+        root->right = restoreTree(postorder_begin, postorder_end, ++inorder_root, inorder_end);
+        root->left  = restoreTree(postorder_begin, postorder_end, inorder_begin, --inorder_root);
 
         return root;
     }
@@ -101,14 +101,14 @@ int main()
 
     test({1}, {1}, new TreeNode{1});
 
-    test({2, 1}, {1, 2},
+    test({1, 2}, {1, 2},
         new TreeNode{2,
             new TreeNode{1},
             nullptr
         }
     );
 
-    test({3, 2, 1}, {1, 2, 3},
+    test({1, 2, 3}, {1, 2, 3},
         new TreeNode{3,
             new TreeNode{2,
                 new TreeNode{1},
@@ -118,7 +118,7 @@ int main()
         }
     );
 
-    test({3, 2, 1}, {3, 2, 1},
+    test({3, 2, 1}, {1, 2, 3},
         new TreeNode{3,
             nullptr,
             new TreeNode{2,
@@ -128,14 +128,14 @@ int main()
         }
     );
 
-    test({1, 2, 3}, {2, 1, 3},
+    test({2, 1, 3}, {2, 3, 1},
         new TreeNode{1,
             new TreeNode{2},
             new TreeNode{3}
         }
     );
 
-    test({1, 2, 3, 4, 5}, {2, 3, 1, 5, 4},
+    test({2, 3, 1, 5, 4}, {3, 2, 5, 4, 1},
         new TreeNode{1,
             new TreeNode{2,
                 nullptr,
@@ -146,7 +146,7 @@ int main()
         }
     );
 
-    test({1, 2, 3, 4, 5, 6, 7}, {3, 2, 4, 1, 6, 5, 7},
+    test({3, 2, 4, 1, 6, 5, 7}, {3, 4, 2, 6, 7, 5, 1},
         new TreeNode{1,
             new TreeNode{2,
                 new TreeNode{3},

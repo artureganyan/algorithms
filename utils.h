@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
 
 
 // Test
@@ -368,9 +369,14 @@ public:
         destroy_tree<Node, Traits>(root_);
     }
 
-    operator Node*() const
+    Node* data() const
     {
         return root_;
+    }
+
+    operator Node*() const
+    {
+        return data();
     }
 
 private:
@@ -398,6 +404,48 @@ struct compare_trees_functor
         return compare_trees(tree1, tree2);
     }
 };
+
+// If the tree is a balanced search tree which values are within
+// (min_value, max_value), returns its height, otherwise -1
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+int is_balanced_search_tree_impl(Node* tree,
+    const typename Traits::Value& min_value, const typename Traits::Value& max_value,
+    bool allow_duplicates)
+{
+    if (!tree)
+        return 0;
+
+    const auto root_value = Traits::value(tree);
+    if ((root_value <  min_value || root_value >  max_value) || (!allow_duplicates &&
+        (root_value == min_value || root_value == max_value)))
+        return -1;
+
+    int height_left = is_balanced_search_tree_impl(Traits::child(tree, 0), min_value, root_value, allow_duplicates);
+    if (height_left < 0)
+        return -1;
+
+    int height_right = is_balanced_search_tree_impl(Traits::child(tree, 1), root_value, max_value, allow_duplicates);
+    if (height_right < 0)
+        return -1;
+
+    if (std::abs(height_left - height_right) > 1)
+        return -1;
+
+    return std::max(height_left, height_right) + 1;
+}
+
+// Note: For the null tree, returns false
+template <typename Node, typename Traits = DefaultTreeTraits<Node>>
+bool is_balanced_search_tree(Node* tree, bool allow_duplicates = true)
+{
+    if (!tree)
+        return false;
+
+    return is_balanced_search_tree_impl(tree,
+        std::numeric_limits<typename Traits::Value>::min(),
+        std::numeric_limits<typename Traits::Value>::max(),
+        allow_duplicates) >= 0;
+}
 
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
 std::string tree_to_string_impl(Node* tree, const std::string& indent, const std::string& null, bool is_root)

@@ -1,3 +1,4 @@
+#include "utils.h"
 #include <iostream>
 #include <vector>
 
@@ -23,6 +24,7 @@ static std::vector<TestEntryPoint*> tests;
         return result;                              \
     }
 
+//ADD_TEST(test_utils);
 //ADD_TEST(longest_substring_without_repeating_characters);
 //ADD_TEST(zig_zag_conversion);
 //ADD_TEST(max_increase_to_keep_city_skyline);
@@ -80,6 +82,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(binary_tree_level_order_traversal);
 //ADD_TEST(binary_tree_zigzag_level_order_traversal);
 //ADD_TEST(construct_binary_tree_from_preorder_and_inorder_traversal);
-ADD_TEST(construct_binary_tree_from_inorder_and_postorder_traversal);
+//ADD_TEST(construct_binary_tree_from_inorder_and_postorder_traversal);
+ADD_TEST(convert_sorted_list_to_binary_search_tree);
 
 RUN_TESTS();

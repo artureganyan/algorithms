@@ -81,15 +81,15 @@ private:
 template <typename Solution>
 void test()
 {
-    ASSERT( compare_sets(Solution().run({}), {{}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({}), {{}}) );
 
-    ASSERT( compare_sets(Solution().run({-1}), {{}, {-1}}) );
-    ASSERT( compare_sets(Solution().run({ 0}), {{}, { 0}}) );
-    ASSERT( compare_sets(Solution().run({ 1}), {{}, { 1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({-1}), {{}, {-1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({ 0}), {{}, { 0}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({ 1}), {{}, { 1}}) );
 
-    ASSERT( compare_sets(Solution().run({1, 2}), {{}, {1}, {2}, {1, 2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({1, 2}), {{}, {1}, {2}, {1, 2}}) );
 
-    ASSERT( compare_sets(Solution().run({1, 2, 3}), {{}, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({1, 2, 3}), {{}, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}) );
 
     // Test performance
     const int size = 20;

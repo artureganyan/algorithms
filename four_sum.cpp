@@ -41,22 +41,22 @@ public:
 int main()
 {
     std::vector<int> v;
-    ASSERT(compare_sets(Solution().run(v = {}, 0), {}));
-    ASSERT(compare_sets(Solution().run(v = {1}, 1), {}));
-    ASSERT(compare_sets(Solution().run(v = {1, 0}, 1), {}));
-    ASSERT(compare_sets(Solution().run(v = {1, 0, 0}, 1), {}));
-    ASSERT(compare_sets(Solution().run(v = {1, 0, 0, 0}, 1), {{1, 0, 0, 0}}));
-    ASSERT(compare_sets(Solution().run(v = {0, 1, 0, 0}, 1), {{1, 0, 0, 0}}));
-    ASSERT(compare_sets(Solution().run(v = {0, 0, 1, 0}, 1), {{1, 0, 0, 0}}));
-    ASSERT(compare_sets(Solution().run(v = {0, 0, 0, 1}, 1), {{1, 0, 0, 0}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 0, 0, 1}, 1), {}));
-    ASSERT(compare_sets(Solution().run(v = {1, -1, 0, 1}, 1), {{1, -1, 0, 1}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 1, 1, 1}, 4), {{1, 1, 1, 1}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 1, 1, 1, 1, 1, 1}, 4), {{1, 1, 1, 1}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 2, 3, 4}, 10), {{1, 2, 3, 4}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 2, 3, 4, 1}, 10), {{1, 2, 3, 4}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 2, 3, 4, 1, 2}, 10), {{1, 2, 3, 4}}));
-    ASSERT(compare_sets(Solution().run(v = {1, 2, 3, 4, 1, 2, 3}, 10), {{1, 2, 3, 4}, {2, 2, 3, 3}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {}, 0), {}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 0}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 0, 0}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 0, 0, 0}, 1), {{1, 0, 0, 0}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {0, 1, 0, 0}, 1), {{1, 0, 0, 0}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {0, 0, 1, 0}, 1), {{1, 0, 0, 0}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {0, 0, 0, 1}, 1), {{1, 0, 0, 0}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 0, 0, 1}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, -1, 0, 1}, 1), {{1, -1, 0, 1}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 1, 1, 1}, 4), {{1, 1, 1, 1}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 1, 1, 1, 1, 1, 1}, 4), {{1, 1, 1, 1}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 2, 3, 4}, 10), {{1, 2, 3, 4}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 2, 3, 4, 1}, 10), {{1, 2, 3, 4}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 2, 3, 4, 1, 2}, 10), {{1, 2, 3, 4}}));
+    ASSERT(compare_sets_of_sets(Solution().run(v = {1, 2, 3, 4, 1, 2, 3}, 10), {{1, 2, 3, 4}, {2, 2, 3, 3}}));
 
     return 0;
 }

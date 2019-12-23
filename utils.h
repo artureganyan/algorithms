@@ -100,7 +100,7 @@ struct compare_sets_functor
 };
 
 template <typename T, typename Compare = std::equal_to<T>>
-bool compare_sets(const std::vector<std::vector<T>>& set1, const std::vector<std::vector<T>>& set2)
+bool compare_sets_of_sets(const std::vector<std::vector<T>>& set1, const std::vector<std::vector<T>>& set2)
 {
     return compare_sets<decltype(set1), compare_sets_functor<std::vector<T>, Compare>>(set1, set2);
 }

@@ -61,15 +61,15 @@ int main()
 {
     std::vector<int> nums;
 
-    ASSERT( compare_sets(Solution().run(nums = {}), {{}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1}), {{}, {1}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1, 2}), {{}, {1}, {2}, {1, 2}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1, 2, 3}), {{}, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {}), {{}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1}), {{}, {1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 2}), {{}, {1}, {2}, {1, 2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 2, 3}), {{}, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}) );
 
-    ASSERT( compare_sets(Solution().run(nums = {1, 1}), {{}, {1}, {1, 1}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1, 1, 1}), {{}, {1}, {1, 1}, {1, 1, 1}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1, 1, 2}), {{}, {1}, {2}, {1, 1}, {1, 2}, {1, 1, 2}}) );
-    ASSERT( compare_sets(Solution().run(nums = {1, 1, 2, 2}), {{}, {1}, {2}, {1, 1}, {2, 2}, {1, 2}, {1, 1, 2}, {1, 2, 2}, {1, 1, 2, 2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 1}), {{}, {1}, {1, 1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 1, 1}), {{}, {1}, {1, 1}, {1, 1, 1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 1, 2}), {{}, {1}, {2}, {1, 1}, {1, 2}, {1, 1, 2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(nums = {1, 1, 2, 2}), {{}, {1}, {2}, {1, 1}, {2, 2}, {1, 2}, {1, 1, 2}, {1, 2, 2}, {1, 1, 2, 2}}) );
 
     return 0;
 }

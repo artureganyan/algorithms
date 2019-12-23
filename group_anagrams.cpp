@@ -96,11 +96,11 @@ private:
 
 int main()
 {
-    ASSERT( compare_sets(Solution().run({}), {}) );
-    ASSERT( compare_sets(Solution().run({""}), {{""}}) );
-    ASSERT( compare_sets(Solution().run({"a"}), {{"a"}}) );
-    ASSERT( compare_sets(Solution().run({"a", "b", "c"}), {{"a"}, {"b"}, {"c"}}) );
-    ASSERT( compare_sets(Solution().run({"abz", "abz", "bza", "abza", "azb", "aa", "cb", "bc", "", "d", ""}), {{"abz", "abz", "bza", "azb"}, {"cb", "bc"}, {"abza"}, {"aa"}, {"d"}, {"", ""}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({}), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run({""}), {{""}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({"a"}), {{"a"}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({"a", "b", "c"}), {{"a"}, {"b"}, {"c"}}) );
+    ASSERT( compare_sets_of_sets(Solution().run({"abz", "abz", "bza", "abza", "azb", "aa", "cb", "bc", "", "d", ""}), {{"abz", "abz", "bza", "azb"}, {"cb", "bc"}, {"abza"}, {"aa"}, {"d"}, {"", ""}}) );
 
     // Test performance
     std::cout << "Test performance" << std::endl;

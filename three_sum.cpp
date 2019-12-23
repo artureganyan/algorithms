@@ -85,12 +85,12 @@ public:
 
 int main()
 {
-    ASSERT(compare_sets(Solution().run({-1, 0, 1, 2, -1, -4}), {{-1, 0, 1}, {-1, -1, 2}}));
-    ASSERT(compare_sets(Solution().run({}), {}));
-    ASSERT(compare_sets(Solution().run({1}), {}));
-    ASSERT(compare_sets(Solution().run({0, 0, 0, 0}), {{0, 0, 0}}));
-    ASSERT(compare_sets(Solution().run({2, -2, 1}), {}));
-    ASSERT(compare_sets(Solution().run({1, 1, -2, 1, 1, -2}), {{1, 1, -2}}) );
+    ASSERT(compare_sets_of_sets(Solution().run({-1, 0, 1, 2, -1, -4}), {{-1, 0, 1}, {-1, -1, 2}}));
+    ASSERT(compare_sets_of_sets(Solution().run({}), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({1}), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({0, 0, 0, 0}), {{0, 0, 0}}));
+    ASSERT(compare_sets_of_sets(Solution().run({2, -2, 1}), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({1, 1, -2, 1, 1, -2}), {{1, 1, -2}}) );
 
     return 0;
 }

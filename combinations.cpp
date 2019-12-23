@@ -96,32 +96,32 @@ private:
 template <typename Solution>
 void test()
 {
-    ASSERT( compare_sets(Solution().run(-1, -1), {}) );
-    ASSERT( compare_sets(Solution().run(-1,  0), {}) );
-    ASSERT( compare_sets(Solution().run(-1,  1), {}) );
-    ASSERT( compare_sets(Solution().run( 0, -1), {}) );
-    ASSERT( compare_sets(Solution().run( 0,  0), {}) );
-    ASSERT( compare_sets(Solution().run( 0,  1), {}) );
-    ASSERT( compare_sets(Solution().run( 1, -1), {}) );
-    ASSERT( compare_sets(Solution().run( 1,  0), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(-1, -1), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(-1,  0), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(-1,  1), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run( 0, -1), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run( 0,  0), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run( 0,  1), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run( 1, -1), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run( 1,  0), {}) );
 
-    ASSERT( compare_sets(Solution().run(1, 1), {{1}}) );
-    ASSERT( compare_sets(Solution().run(1, 2), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(1, 1), {{1}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(1, 2), {}) );
 
-    ASSERT( compare_sets(Solution().run(2, 1), {{1}, {2}}) );
-    ASSERT( compare_sets(Solution().run(2, 2), {{1, 2}}) );
-    ASSERT( compare_sets(Solution().run(2, 3), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(2, 1), {{1}, {2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(2, 2), {{1, 2}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(2, 3), {}) );
 
-    ASSERT( compare_sets(Solution().run(3, 1), {{1}, {2}, {3}}) );
-    ASSERT( compare_sets(Solution().run(3, 2), {{1, 2}, {1, 3}, {2, 3}}) );
-    ASSERT( compare_sets(Solution().run(3, 3), {{1, 2, 3}}) );
-    ASSERT( compare_sets(Solution().run(3, 4), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(3, 1), {{1}, {2}, {3}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(3, 2), {{1, 2}, {1, 3}, {2, 3}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(3, 3), {{1, 2, 3}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(3, 4), {}) );
 
-    ASSERT( compare_sets(Solution().run(4, 1), {{1}, {2}, {3}, {4}}) );
-    ASSERT( compare_sets(Solution().run(4, 2), {{1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}}) );
-    ASSERT( compare_sets(Solution().run(4, 3), {{1, 2, 3}, {1, 2, 4}, {1, 3, 4}, {2, 3, 4}}) );
-    ASSERT( compare_sets(Solution().run(4, 4), {{1, 2, 3, 4}}) );
-    ASSERT( compare_sets(Solution().run(4, 5), {}) );
+    ASSERT( compare_sets_of_sets(Solution().run(4, 1), {{1}, {2}, {3}, {4}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(4, 2), {{1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(4, 3), {{1, 2, 3}, {1, 2, 4}, {1, 3, 4}, {2, 3, 4}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(4, 4), {{1, 2, 3, 4}}) );
+    ASSERT( compare_sets_of_sets(Solution().run(4, 5), {}) );
 
     // Test performance
     const int n = 15;

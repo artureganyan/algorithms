@@ -130,17 +130,17 @@ private:
 template <typename Solution>
 void test()
 {
-    ASSERT(compare_sets(Solution().run({}, 1), {}));
-    ASSERT(compare_sets(Solution().run({-1}, 1), {}));
-    ASSERT(compare_sets(Solution().run({2}, 1), {}));
-    ASSERT(compare_sets(Solution().run({-1, 2}, 1), {}));
-    ASSERT(compare_sets(Solution().run({1}, 1), {{1}}));
-    ASSERT(compare_sets(Solution().run({1, 1}, 1), {{1}}));
-    ASSERT(compare_sets(Solution().run({1}, 2), {{1, 1}}));
-    ASSERT(compare_sets(Solution().run({2}, 7), {}));
-    ASSERT(compare_sets(Solution().run({1, 2}, 2), {{1, 1}, {2}}));
-    ASSERT(compare_sets(Solution().run({1, 2, 3}, 3), {{1, 1, 1}, {1, 2}, {3}}));
-    ASSERT(compare_sets(Solution().run({3, 5}, 15), {{3, 3, 3, 3, 3}, {5, 5, 5}}));
+    ASSERT(compare_sets_of_sets(Solution().run({}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({-1}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({2}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({-1, 2}, 1), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({1}, 1), {{1}}));
+    ASSERT(compare_sets_of_sets(Solution().run({1, 1}, 1), {{1}}));
+    ASSERT(compare_sets_of_sets(Solution().run({1}, 2), {{1, 1}}));
+    ASSERT(compare_sets_of_sets(Solution().run({2}, 7), {}));
+    ASSERT(compare_sets_of_sets(Solution().run({1, 2}, 2), {{1, 1}, {2}}));
+    ASSERT(compare_sets_of_sets(Solution().run({1, 2, 3}, 3), {{1, 1, 1}, {1, 2}, {3}}));
+    ASSERT(compare_sets_of_sets(Solution().run({3, 5}, 15), {{3, 3, 3, 3, 3}, {5, 5, 5}}));
 }
 
 int main()

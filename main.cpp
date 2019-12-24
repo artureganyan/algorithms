@@ -84,6 +84,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(construct_binary_tree_from_preorder_and_inorder_traversal);
 //ADD_TEST(construct_binary_tree_from_inorder_and_postorder_traversal);
 //ADD_TEST(convert_sorted_list_to_binary_search_tree);
-ADD_TEST(path_sum_2);
+//ADD_TEST(path_sum_2);
+ADD_TEST(flatten_binary_tree_to_linked_list);
 
 RUN_TESTS();

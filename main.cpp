@@ -87,6 +87,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(path_sum_2);
 //ADD_TEST(flatten_binary_tree_to_linked_list);
 //ADD_TEST(populating_next_right_pointers_in_each_node);
-ADD_TEST(triangle);
+//ADD_TEST(triangle);
+ADD_TEST(word_ladder);
 
 RUN_TESTS();

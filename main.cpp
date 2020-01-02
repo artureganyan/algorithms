@@ -90,6 +90,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(triangle);
 //ADD_TEST(word_ladder);
 //ADD_TEST(sum_root_to_leaf_numbers);
-ADD_TEST(surrounded_regions);
+//ADD_TEST(surrounded_regions);
+ADD_TEST(palindrome_partitioning);
 
 RUN_TESTS();

@@ -92,6 +92,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(sum_root_to_leaf_numbers);
 //ADD_TEST(surrounded_regions);
 //ADD_TEST(palindrome_partitioning);
-ADD_TEST(clone_graph);
+//ADD_TEST(clone_graph);
+ADD_TEST(gas_station);
 
 RUN_TESTS();

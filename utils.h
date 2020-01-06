@@ -198,7 +198,7 @@ std::string list_to_string(Node* head)
 
     Node* node = head;
     while (node) {
-        if (result.size())
+        if (node != head)
             result += ", ";
         result += to_string(Traits::value(node));
         node = Traits::next(node);
@@ -262,11 +262,7 @@ class DefaultTreeTraits {
 public:
     typedef decltype(Node::val) Value;
 
-    enum {
-        ChildCount = 2
-    };
-
-    static Node* child(Node* node, int index)
+    static Node* child(const Node* node, int index)
     {
         if (!node)
             return nullptr;
@@ -278,6 +274,11 @@ public:
     {
         if (node)
             getChildRef(node, index) = child;
+    }
+
+    static int childCount(const Node* node)
+    {
+        return 2;
     }
 
     static Value value(const Node* node)
@@ -303,12 +304,27 @@ public:
     }
 
 private:
+    static Node* const& getChildRef(const Node* node, int index)
+    {
+        if (!node)
+            throw std::runtime_error("DefaultTreeTraits: Null node");
+
+        if (index < 0 || index >= childCount(node))
+            throw std::out_of_range("DefaultTreeTraits: Incorrect child index");
+
+        if (index == 0)
+            return node->left;
+
+        if (index == 1)
+            return node->right;
+    }
+
     static Node*& getChildRef(Node* node, int index)
     {
         if (!node)
             throw std::runtime_error("DefaultTreeTraits: Null node");
 
-        if (index < 0 || index >= ChildCount)
+        if (index < 0 || index >= childCount(node))
             throw std::out_of_range("DefaultTreeTraits: Incorrect child index");
 
         if (index == 0)
@@ -325,8 +341,9 @@ void destroy_tree(Node* root)
     if (!root)
         return;
 
-    for (int i = 0; i < Traits::ChildCount; i++)
-        destroy_tree(Traits::child(root, i));
+    const int child_count = Traits::childCount(root);
+    for (int i = 0; i < child_count; i++)
+        destroy_tree<Node, Traits>(Traits::child(root, i));
 
     Traits::destroy(root);
 }
@@ -339,8 +356,9 @@ void get_tree_nodes(Node* tree, std::vector<Node*>& nodes)
 
     nodes.push_back(tree);
 
-    for (int i = 0; i < Traits::ChildCount; i++)
-        get_tree_nodes(Traits::child(tree, i), nodes);
+    const int child_count = Traits::childCount(tree);
+    for (int i = 0; i < child_count; i++)
+        get_tree_nodes<Node, Traits>(Traits::child(tree, i), nodes);
 }
 
 // Destroys trees even if they contain shared nodes (i.e. if one node is
@@ -350,7 +368,7 @@ void destroy_trees(const std::vector<Node*>& trees)
 {
     std::vector<Node*> nodes;
     for (auto tree : trees)
-        get_tree_nodes(tree, nodes);
+        get_tree_nodes<Node, Traits>(tree, nodes);
 
     std::sort(nodes.begin(), nodes.end());
     nodes.erase(std::unique(nodes.begin(), nodes.end()), nodes.end());
@@ -392,8 +410,16 @@ bool compare_trees(const Node* tree1, const Node* tree2)
     if (tree1->val != tree2->val)
         return false;
 
-    return compare_trees(tree1->left,  tree2->left) &&
-           compare_trees(tree1->right, tree2->right);
+    const int child_count1 = Traits::childCount(tree1);
+    const int child_count2 = Traits::childCount(tree2);
+    if (child_count1 != child_count2)
+        return false;
+
+    for (int i = 0; i < child_count1; i++) {
+        if (!compare_trees<Node, Traits>(Traits::child(tree1, i), Traits::child(tree2, i)))
+            return false;
+    }
+    return true;
 }
 
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
@@ -401,7 +427,7 @@ struct compare_trees_functor
 {
     bool operator ()(const Node* tree1, const Node* tree2) const
     {
-        return compare_trees(tree1, tree2);
+        return compare_trees<Node, Traits>(tree1, tree2);
     }
 };
 
@@ -420,11 +446,11 @@ int is_balanced_search_tree_impl(Node* tree,
         (root_value == min_value || root_value == max_value)))
         return -1;
 
-    int height_left = is_balanced_search_tree_impl(Traits::child(tree, 0), min_value, root_value, allow_duplicates);
+    int height_left = is_balanced_search_tree_impl<Node, Traits>(Traits::child(tree, 0), min_value, root_value, allow_duplicates);
     if (height_left < 0)
         return -1;
 
-    int height_right = is_balanced_search_tree_impl(Traits::child(tree, 1), root_value, max_value, allow_duplicates);
+    int height_right = is_balanced_search_tree_impl<Node, Traits>(Traits::child(tree, 1), root_value, max_value, allow_duplicates);
     if (height_right < 0)
         return -1;
 
@@ -441,7 +467,7 @@ bool is_balanced_search_tree(Node* tree, bool allow_duplicates = true)
     if (!tree)
         return false;
 
-    return is_balanced_search_tree_impl(tree,
+    return is_balanced_search_tree_impl<Node, Traits>(tree,
         std::numeric_limits<typename Traits::Value>::min(),
         std::numeric_limits<typename Traits::Value>::max(),
         allow_duplicates) >= 0;
@@ -463,8 +489,8 @@ std::string tree_to_string_impl(Node* tree, const std::string& indent, const std
             if (!is_root)
                 next_indent += indent;
 
-            result << tree_to_string_impl(tree->left,  next_indent, null, false);
-            result << tree_to_string_impl(tree->right, next_indent, null, false);
+            result << tree_to_string_impl<Node, Traits>(tree->left,  next_indent, null, false);
+            result << tree_to_string_impl<Node, Traits>(tree->right, next_indent, null, false);
         }
     } else {
         result << null << std::endl;
@@ -476,13 +502,13 @@ std::string tree_to_string_impl(Node* tree, const std::string& indent, const std
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
 std::string tree_to_string_ex(Node* tree, const std::string& indent, const std::string& null)
 {
-    return tree_to_string_impl(tree, indent, null, true);
+    return tree_to_string_impl<Node, Traits>(tree, indent, null, true);
 }
 
 template <typename Node, typename Traits = DefaultTreeTraits<Node>>
 std::string tree_to_string(Node* tree)
 {
-    return tree_to_string_ex(tree, "    ", "null");
+    return tree_to_string_ex<Node, Traits>(tree, "    ", "null");
 }
 
 

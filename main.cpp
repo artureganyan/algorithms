@@ -94,6 +94,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(palindrome_partitioning);
 //ADD_TEST(clone_graph);
 //ADD_TEST(gas_station);
-ADD_TEST(copy_list_with_random_pointer);
+//ADD_TEST(copy_list_with_random_pointer);
+ADD_TEST(word_break);
 
 RUN_TESTS();

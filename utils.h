@@ -147,14 +147,130 @@ public:
     }
 };
 
+template <typename NodePtr, typename Traits>
+class BaseListIterator {
+public:
+    BaseListIterator(NodePtr node = nullptr) : node_(node) {}
+
+    BaseListIterator(const BaseListIterator& other)
+    {
+        node_    = other.node_;
+        visited_ = other.visited_;
+    }
+
+    BaseListIterator& operator =(const BaseListIterator& other)
+    {
+        if (this == &other)
+            return *this;
+
+        node_    = other.node_;
+        visited_ = other.visited_;
+        return *this;
+    }
+
+    BaseListIterator& operator++()
+    {
+        node_ = advance(node_);
+        return *this;
+    }
+
+    BaseListIterator operator++(int /*post-increment*/)
+    {
+        const auto prev = *this;
+        ++(*this);
+        return prev;
+    }
+
+    bool atEnd() const
+    {
+        return node_ == nullptr;
+    }
+
+    bool atCycle() const
+    {
+        return visited_.find(node_) != visited_.end();
+    }
+
+    bool visitedAllNodes() const
+    {
+        return atEnd() || atCycle();
+    }
+
+    int index() const
+    {
+        const auto vi = visited_.find(node_);
+        if (vi != visited_.end())
+            return *vi;
+
+        return visited_.size();
+    }
+
+    NodePtr operator ->() const
+    {
+        return node_;
+    }
+
+    NodePtr operator *() const
+    {
+        return node_;
+    }
+
+    operator bool() const
+    {
+        return !atEnd();
+    }
+
+    operator NodePtr() const
+    {
+        return node_;
+    }
+
+    bool operator ==(const BaseListIterator<NodePtr, Traits>& other) const
+    {
+        return node_ == other.node_;
+    }
+
+    bool operator !=(const BaseListIterator<NodePtr, Traits>& other) const
+    {
+        return !(*this == other);
+    }
+
+private:
+    NodePtr advance(NodePtr node)
+    {
+        if (!node)
+            return nullptr;
+
+        if (visited_.find(node) == visited_.end())
+            visited_[node] = visited_.size();
+
+        node = Traits::next(node);
+    }
+
+    typedef std::unordered_map<NodePtr, int /*index*/> NodeMap;
+
+    NodePtr node_;
+    NodeMap visited_;
+};
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+class ListIterator : public BaseListIterator<Node*, Traits> {
+public:
+    using BaseListIterator<Node*, Traits>::BaseListIterator;
+};
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
+class ConstListIterator : public BaseListIterator<const Node*, Traits> {
+public:
+    using BaseListIterator<const Node*, Traits>::BaseListIterator;
+};
+
 template <typename Node, typename Traits = DefaultListTraits<Node>>
 void destroy_list(Node* head)
 {
-    Node* node = head;
-    while (node) {
-        Node* next = Traits::next(node);
-        Traits::destroy(node);
-        node = next;
+    ListIterator<Node, Traits> it(head);
+    while (!it.visitedAllNodes()) {
+        Traits::destroy(it++);
     }
 }
 
@@ -182,10 +298,10 @@ std::vector<typename Traits::Value> list_to_vector(Node* head)
 {
     std::vector<typename Traits::Value> result;
 
-    Node* node = head;
-    while (node) {
-        result.push_back(Traits::value(node));
-        node = Traits::next(node);
+    ListIterator<Node, Traits> it(head);
+    while (!it.visitedAllNodes()) {
+        result.push_back(Traits::value(it));
+        ++it;
     }
 
     return result;
@@ -194,15 +310,20 @@ std::vector<typename Traits::Value> list_to_vector(Node* head)
 template <typename Node, typename Traits = DefaultListTraits<Node>>
 std::string list_to_string(Node* head)
 {
-    std::string result = "{";
+    const char* SEPARATOR = ", ";
 
-    Node* node = head;
-    while (node) {
-        if (node != head)
-            result += ", ";
-        result += to_string(Traits::value(node));
-        node = Traits::next(node);
+    std::string result = "{";
+    int         count  = 0;
+
+    ListIterator<Node, Traits> it(head);
+    while (!it.visitedAllNodes()) {
+        if (count++)
+            result += SEPARATOR;
+        result += to_string(Traits::value(it));
+        ++it;
     }
+    if (it.atCycle())
+        result += SEPARATOR + to_string(Traits::value(it)) + SEPARATOR + "...";
 
     result += "}";
     return result;
@@ -233,13 +354,15 @@ TemporaryList<Node> create_temp_list(std::initializer_list<typename Traits::Valu
 template <typename Node, typename Traits = DefaultListTraits<Node>>
 bool compare_lists(Node* head1, Node* head2)
 {
-    while (head1 && head2) {
-        if (Traits::value(head1) != Traits::value(head2))
+    ListIterator<Node, Traits> it1(head1);
+    ListIterator<Node, Traits> it2(head2);
+    while (!it1.visitedAllNodes() && !it2.visitedAllNodes()) {
+        if (Traits::value(it1) != Traits::value(it2))
             return false;
-        head1 = Traits::next(head1);
-        head2 = Traits::next(head2);
+        ++it1;
+        ++it2;
     }
-    return head1 == nullptr && head2 == nullptr;
+    return it1.index() == it2.index();
 }
 
 template <typename Node, typename Container, typename Traits = DefaultListTraits<Node>>

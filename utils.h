@@ -346,9 +346,9 @@ Node* create_list(std::initializer_list<typename Traits::Value> values)
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
-TemporaryList<Node> create_temp_list(std::initializer_list<typename Traits::Value> values)
+TemporaryList<Node, Traits> create_temp_list(std::initializer_list<typename Traits::Value> values)
 {
-    return TemporaryList<Node>(create_list<Node, Traits>(values));
+    return TemporaryList<Node, Traits>(create_list<Node, Traits>(values));
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>

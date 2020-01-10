@@ -97,6 +97,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(copy_list_with_random_pointer);
 //ADD_TEST(word_break);
 //ADD_TEST(linked_list_cycle_2);
-ADD_TEST(reorder_list);
+//ADD_TEST(reorder_list);
+ADD_TEST(binary_tree_preorder_traversal);
 
 RUN_TESTS();

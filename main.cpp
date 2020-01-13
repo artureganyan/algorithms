@@ -99,6 +99,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(linked_list_cycle_2);
 //ADD_TEST(reorder_list);
 //ADD_TEST(binary_tree_preorder_traversal);
-ADD_TEST(insertion_sort_list);
+//ADD_TEST(insertion_sort_list);
+ADD_TEST(sort_list);
 
 RUN_TESTS();

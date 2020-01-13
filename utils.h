@@ -284,7 +284,12 @@ public:
         destroy_list<Node, Traits>(head_);
     }
 
-    operator Node*() const
+    operator Node*()
+    {
+        return head_;
+    }
+
+    operator const Node*() const
     {
         return head_;
     }

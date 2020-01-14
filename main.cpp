@@ -100,6 +100,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(reorder_list);
 //ADD_TEST(binary_tree_preorder_traversal);
 //ADD_TEST(insertion_sort_list);
-ADD_TEST(sort_list);
+//ADD_TEST(sort_list);
+ADD_TEST(evaluate_reverse_polish_notation);
 
 RUN_TESTS();

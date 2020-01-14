@@ -57,6 +57,12 @@ std::string to_string(const Container<T>& container)
     return s.str();
 }
 
+template <>
+inline std::string to_string(const std::string& s)
+{
+    return s;
+}
+
 inline std::string to_string(bool value)
 {
     return value ? "true" : "false";

@@ -101,6 +101,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(binary_tree_preorder_traversal);
 //ADD_TEST(insertion_sort_list);
 //ADD_TEST(sort_list);
-ADD_TEST(evaluate_reverse_polish_notation);
+//ADD_TEST(evaluate_reverse_polish_notation);
+ADD_TEST(reverse_words_in_a_string);
 
 RUN_TESTS();

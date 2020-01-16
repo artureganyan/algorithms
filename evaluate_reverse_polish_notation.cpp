@@ -1,18 +1,15 @@
 // Problem: https://leetcode.com/problems/evaluate-reverse-polish-notation/
 
 #include <vector>
-#include <list>
 #include <string>
 #include "utils.h"
 
 namespace evaluate_reverse_polish_notation {
 
-// The straightforward solution
-
 class Solution {
 public:
-    // Note: The tokens must be a valid expression. Each token must be an
-    // integer or one of the following operators: "+", "-", "*", "/".
+    // Note: The tokens must represent a valid expression. Each token must be
+    // an integer or one of the following operators: "+", "-", "*", "/".
     //
     // Time: O(n), Space: O(n), n - number of tokens
     //
@@ -21,47 +18,30 @@ public:
         if (!tokens.size())
             return 0;
 
-        enum Operation {
-            Operation_Undefined,
-            Operation_Add,
-            Operation_Minus,
-            Operation_Multiply,
-            Operation_Divide
-        };
+        std::vector<int> operands;
 
-        std::list<std::string> tokens_list(tokens.begin(), tokens.end());
-
-        for (auto it = tokens_list.begin(); it != tokens_list.end(); it++) {
-            const std::string token = *it;
-
-            // Determine the operation
-            Operation operation = Operation_Undefined;
-            if (token == "+") operation = Operation_Add;      else
-            if (token == "-") operation = Operation_Minus;    else
-            if (token == "*") operation = Operation_Multiply; else
-            if (token == "/") operation = Operation_Divide;
-
-            if (operation == Operation_Undefined)
-                continue;
-
-            // Do the operation
-            const int operand2 = std::stoi(*(--it));
-            const int operand1 = std::stoi(*(--it));
+        for (const std::string& token : tokens) {
+            const int i_op = (int) operands.size() - 1;
 
             int result = 0;
-            if (operation == Operation_Add)      result = operand1 + operand2; else
-            if (operation == Operation_Minus)    result = operand1 - operand2; else
-            if (operation == Operation_Multiply) result = operand1 * operand2; else
-            if (operation == Operation_Divide)   result = operand1 / operand2;
+            if (token == "+") {
+                result = operands[i_op - 1] + operands[i_op];
+            } else if (token == "-") {
+                result = operands[i_op - 1] - operands[i_op];
+            } else if (token == "*") {
+                result = operands[i_op - 1] * operands[i_op];
+            } else if (token == "/") {
+                result = operands[i_op - 1] / operands[i_op];
+            } else {
+                operands.push_back(std::stoi(token));
+                continue;
+            }
 
-            // Replace the operation with the result
-            for (int i = 0; i < 3; i++)
-                it = tokens_list.erase(it);
-
-            it = tokens_list.insert(it, std::to_string(result));
+            operands.pop_back();
+            operands.back() = result;
         }
 
-        return std::stoi(tokens_list.front());
+        return operands.back();
     }
 };
 

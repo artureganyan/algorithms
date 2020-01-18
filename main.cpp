@@ -103,6 +103,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(sort_list);
 //ADD_TEST(evaluate_reverse_polish_notation);
 //ADD_TEST(reverse_words_in_a_string);
-ADD_TEST(maximum_product_subarray);
+//ADD_TEST(maximum_product_subarray);
+ADD_TEST(find_minimum_in_rotated_sorted_array);
 
 RUN_TESTS();

@@ -105,6 +105,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(reverse_words_in_a_string);
 //ADD_TEST(maximum_product_subarray);
 //ADD_TEST(find_minimum_in_rotated_sorted_array);
-ADD_TEST(compare_version_numbers);
+//ADD_TEST(compare_version_numbers);
+ADD_TEST(fraction_to_recurring_decimal);
 
 RUN_TESTS();

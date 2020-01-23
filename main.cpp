@@ -107,6 +107,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(find_minimum_in_rotated_sorted_array);
 //ADD_TEST(compare_version_numbers);
 //ADD_TEST(fraction_to_recurring_decimal);
-ADD_TEST(binary_search_tree_iterator);
+//ADD_TEST(binary_search_tree_iterator);
+ADD_TEST(largest_number);
 
 RUN_TESTS();

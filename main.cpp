@@ -108,6 +108,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(compare_version_numbers);
 //ADD_TEST(fraction_to_recurring_decimal);
 //ADD_TEST(binary_search_tree_iterator);
-ADD_TEST(largest_number);
+//ADD_TEST(largest_number);
+ADD_TEST(repeated_dna_sequences);
 
 RUN_TESTS();

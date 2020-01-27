@@ -9,8 +9,12 @@ class Solution {
 public:
     // Note: The grid must be a rectangle and contain only '0' and '1'.
     //
-    // Time: O(w * h), Space: O(1) if not count the grid,
+    // Time: O(w * h), Space: O(w * h),
     // w - width of the grid, h - height of the grid
+    //
+    // Note: This solution uses the depth-first search (DFS) to iterate over
+    // each cell of the "island", so that for the grid of all '1' it will
+    // require O(w * h) space.
     //
     int run(std::vector<std::vector<char>>& grid)
     {

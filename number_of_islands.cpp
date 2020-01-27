@@ -1,6 +1,7 @@
 // Problem: https://leetcode.com/problems/number-of-islands/
 
 #include <vector>
+#include <deque>
 #include "utils.h"
 
 namespace number_of_islands {
@@ -9,12 +10,8 @@ class Solution {
 public:
     // Note: The grid must be a rectangle and contain only '0' and '1'.
     //
-    // Time: O(w * h), Space: O(w * h),
+    // Time: O(w * h), Space: O(w + h) if not count the grid,
     // w - width of the grid, h - height of the grid
-    //
-    // Note: This solution uses the depth-first search (DFS) to iterate over
-    // each cell of the "island", so that for the grid of all '1' it will
-    // require O(w * h) space.
     //
     int run(std::vector<std::vector<char>>& grid)
     {
@@ -45,11 +42,15 @@ private:
             int c;
         };
 
-        std::vector<Cell> connected_cells = {{r, c}};
+        std::deque<Cell> connected_cells = {{r, c}};
 
         while (connected_cells.size()) {
-            const Cell cell = connected_cells.back();
-            connected_cells.pop_back();
+            // Note: Changing front()/pop_front() to back()/pop_back() here
+            // switches from the breadth-first search with O(w + h) space to
+            // the depth-first search with O(w * h) space, where w and h are
+            // the grid's width and height.
+            const Cell cell = connected_cells.front();
+            connected_cells.pop_front();
 
             if (cell.r < 0 || cell.r >= grid.size() ||
                 cell.c < 0 || cell.c >= grid[cell.r].size())

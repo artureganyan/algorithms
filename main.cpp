@@ -111,6 +111,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(largest_number);
 //ADD_TEST(repeated_dna_sequences);
 //ADD_TEST(binary_tree_right_side_view);
-ADD_TEST(number_of_islands);
+//ADD_TEST(number_of_islands);
+ADD_TEST(bitwise_and_of_numbers_range);
 
 RUN_TESTS();

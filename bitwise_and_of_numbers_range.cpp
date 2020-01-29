@@ -6,7 +6,7 @@ namespace bitwise_and_of_numbers_range {
 
 class Solution {
 public:
-    // Note: The numbers must be within [0, 0x7FFFFFFF], and m <= n.
+    // Note: The following must be true: m >= 0, n >= 0, m <= n.
     //
     // Time: O(1), Space: O(1)
     //
@@ -22,8 +22,7 @@ public:
         // of n1 will change from 1 to 0, producing 0 for the i-th bit of the
         // result.
 
-        const int MAX_NUMBER = 0x7FFFFFFF;
-        if (m > n || m < 0 || m > MAX_NUMBER || n < 0 || n > MAX_NUMBER)
+        if (m < 0 || n < 0 || m > n)
             return 0;
 
         if (m == n)
@@ -75,7 +74,6 @@ int main()
     ASSERT( Solution().run(0, 0x7FFFFFFF) == 0 );
     ASSERT( Solution().run(1, 0x7FFFFFFF) == 0 );
     ASSERT( Solution().run(0x7FFFFFFF, 0x7FFFFFFF) == 0x7FFFFFFF );
-    ASSERT( Solution().run(0x7FFFFFFF, 0xFFFFFFFF) == 0 );
 
     return 0;
 }

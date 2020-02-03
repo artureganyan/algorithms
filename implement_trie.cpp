@@ -7,9 +7,18 @@
 
 namespace implement_trie {
 
-class Trie {
+// Straightforward implementation
+//
+// Time:  O(n) for all operations
+// Space: O(d^n_max) for the tree in the worst case, when each possible word of
+//        the length n_max is present in the tree
+//
+// n - length of the word, n_max - maximum length of the word,
+// d - size of the alphabet
+
+class Trie1 {
 public:
-    Trie();
+    Trie1();
 
     void insert(const std::string& word);
     bool search(const std::string& word) const;
@@ -39,14 +48,12 @@ private:
     std::unique_ptr<Node> root_;
 };
 
-
-Trie::Trie()
+Trie1::Trie1()
 {
     root_.reset(new Node);
 }
 
-// Time: O(n), Space: O(n), n - number of characters
-void Trie::insert(const std::string& word)
+void Trie1::insert(const std::string& word)
 {
     if (!word.size())
         return;
@@ -62,20 +69,18 @@ void Trie::insert(const std::string& word)
     node->has_word = true;
 }
 
-// Time: O(n), Space: O(n), n - number of characters
-bool Trie::search(const std::string& word) const
+bool Trie1::search(const std::string& word) const
 {
     return findString(word, true);
 }
 
-// Time: O(n), Space: O(n), n - number of characters
-bool Trie::startsWith(const std::string& prefix) const
+bool Trie1::startsWith(const std::string& prefix) const
 {
     return findString(prefix, false);
 }
 
 // Finds the longest prefix of the string
-Trie::Prefix Trie::findPrefix(const std::string& s) const
+Trie1::Prefix Trie1::findPrefix(const std::string& s) const
 {
     if (!s.size())
         return {};
@@ -92,7 +97,7 @@ Trie::Prefix Trie::findPrefix(const std::string& s) const
 }
 
 // Finds the string as a prefix or as the whole word
-bool Trie::findString(const std::string& s, bool whole_word) const
+bool Trie1::findString(const std::string& s, bool whole_word) const
 {
     if (!s.size())
         return false;
@@ -108,7 +113,136 @@ bool Trie::findString(const std::string& s, bool whole_word) const
 }
 
 
-int main()
+// Optimized for space
+//
+// Time:  O(n) for all operations
+// Space: O(n_max) for the tree
+//
+// n - length of the word, n_max - maximum length of the word
+
+class Trie2 {
+public:
+    Trie2();
+
+    void insert(const std::string& word);
+    bool search(const std::string& word) const;
+    bool startsWith(const std::string& prefix) const;
+
+private:
+    enum {
+        Char_Min   = 'a',
+        Char_Max   = 'z',
+        Char_Count = Char_Max - Char_Min + 1
+    };
+
+    class Node {
+    public:
+        void setChildren(char c, bool enabled);
+        bool hasChildren(char c) const;
+
+        void setWord(char c, bool enabled);
+        bool hasWord(char c) const;
+
+    private:
+        int bit(char c) const;
+
+        uint64_t children_ = 0;
+    };
+
+    struct Level
+    {
+        Node nodes[Char_Count] = {};
+    };
+
+    Node* getNode(int level, char c) const;
+    bool  findString(const std::string& s, bool whole_word) const;
+
+    std::vector<Level> levels_;
+};
+
+Trie2::Trie2()
+{
+    levels_.push_back({});
+}
+
+void Trie2::insert(const std::string& word)
+{
+    if (!word.size())
+        return;
+
+    Node* node = &levels_[0].nodes[0];
+    for (int i = 0; i < word.size(); i++) {
+        const char c = word[i];
+
+        node->setChildren(c, true);
+        if (i == word.size() - 1)
+            node->setWord(c, true);
+
+        if (levels_.size() <= i + 1)
+            levels_.push_back({});
+
+        node = &levels_[i + 1].nodes[c - Char_Min];
+    }
+}
+
+bool Trie2::search(const std::string& word) const
+{
+    return findString(word, true);
+}
+
+bool Trie2::startsWith(const std::string& prefix) const
+{
+    return findString(prefix, false);
+}
+
+bool Trie2::findString(const std::string& s, bool whole_word) const
+{
+    if (!s.size())
+        return false;
+
+    const Node* node = &levels_[0].nodes[0];
+    for (int i = 0; i < s.size(); i++) {
+        const char c = s[i];
+
+        if (!node->hasChildren(c))
+            return false;
+
+        if (i == s.size() - 1 && whole_word && !node->hasWord(c))
+            return false;
+
+        node = &levels_[i + 1].nodes[c - Char_Min];
+    }
+    return true;
+}
+
+inline void Trie2::Node::setChildren(char c, bool enabled)
+{
+    children_ |= 1 << bit(c);
+}
+
+inline bool Trie2::Node::hasChildren(char c) const
+{
+    return children_ & (1 << bit(c));
+}
+
+inline void Trie2::Node::setWord(char c, bool enabled)
+{
+    children_ |= 2 << bit(c);
+}
+
+inline bool Trie2::Node::hasWord(char c) const
+{
+    return children_ & (2 << bit(c));
+}
+
+inline int Trie2::Node::bit(char c) const
+{
+    return (c - Char_Min) * 2;
+}
+
+
+template <typename Trie>
+void test()
 {
     Trie t;
 
@@ -150,6 +284,12 @@ int main()
     ASSERT( t.startsWith("z") == true );
     ASSERT( t.startsWith("zz") == true );
     ASSERT( t.startsWith("zzz") == false );
+}
+
+int main()
+{
+    test<Trie1>();
+    test<Trie2>();
 
     return 0;
 }

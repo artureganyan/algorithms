@@ -14,6 +14,24 @@ public:
     //
     int run(const std::vector<int>& gas, const std::vector<int>& cost)
     {
+        // Idea:
+        // If we move through the station i, our gas changes by
+        // d[i] = gas[i] - cost[i]. Initially the gas is 0, so we can only
+        // start at the station where d[i] >= 0. Suppose that d[0] >= 0, we
+        // start from the first station and move until the station i where our
+        // gas drops below 0, i.e. d[0] + d[1] + ... + d[i] < 0. Then the
+        // stations 0, 1, 2, ..., i are not the answer (because we checked that
+        // the sums (d[0] + d[1] + ... + d[k]) >= 0 for any k=0..i-1, so the
+        // rest sums (d[k+1] + d[k+2] + ... + d[i]) < 0). Suppose that then we
+        // start from the station i+1 (d[i+1] >= 0), and also fail at some
+        // station, and so on, until we start from the station x and reach the
+        // last station without dropping the gas below 0. So we have:
+        // fail    = d[0] + d[1]   + ... + d[x-1] <  0, and
+        // success = d[x] + d[x+1] + ... + d[n-1] >= 0
+        // Then the station x is the answer if success >= |fail|, i.e. if we
+        // have enough gas to continue from the station 0 and finish the circle
+        // at the station x.
+
         if (gas.size() != cost.size())
             throw std::runtime_error("Gas and cost arrays must be of the same size");
 

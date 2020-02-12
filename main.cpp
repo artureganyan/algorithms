@@ -115,6 +115,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(bitwise_and_of_numbers_range);
 //ADD_TEST(course_schedule);
 //ADD_TEST(implement_trie);
-ADD_TEST(minimum_size_subarray_sum);
+//ADD_TEST(minimum_size_subarray_sum);
+ADD_TEST(maximal_square);
 
 RUN_TESTS();

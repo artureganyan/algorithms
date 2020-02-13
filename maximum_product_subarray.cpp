@@ -13,6 +13,21 @@ public:
     //
     int run(const std::vector<int>& nums)
     {
+        // Idea:
+        // Iterate over the numbers, calculate the following products and find
+        // the maximum:
+        //
+        // nums        =   1 10 -2 3 4 -1 1 -10 0 5 6
+        // product1    = 1*1*10*-2*3*4*-1*1*-10,1*5*6
+        // product2    = 0,      1*3*4*-1*1*-10,0
+        // max_product = ?,1,10,    12,     120
+        //
+        // The product1 starts at the each sequence of non-zero numbers.
+        // The product2 starts after the first negative number in the product1.
+        // When the product1 < 0, the product2 holds its largest positive
+        // suffix. In the example above, this is 3*4*-1*1*-10, which gives
+        // the maximum.
+
         if (!nums.size())
             return 0;
 

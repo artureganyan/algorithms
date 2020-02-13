@@ -116,6 +116,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(course_schedule);
 //ADD_TEST(implement_trie);
 //ADD_TEST(minimum_size_subarray_sum);
-ADD_TEST(maximal_square);
+//ADD_TEST(maximal_square);
+ADD_TEST(count_complete_tree_nodes);
 
 RUN_TESTS();

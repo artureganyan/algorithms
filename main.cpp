@@ -118,6 +118,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(minimum_size_subarray_sum);
 //ADD_TEST(maximal_square);
 //ADD_TEST(count_complete_tree_nodes);
-ADD_TEST(rectangle_area);
+//ADD_TEST(rectangle_area);
+ADD_TEST(basic_calculator_2);
 
 RUN_TESTS();

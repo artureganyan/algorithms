@@ -111,6 +111,12 @@ bool compare_sets_of_sets(const std::vector<std::vector<T>>& set1, const std::ve
     return compare_sets<decltype(set1), compare_sets_functor<std::vector<T>, Compare>>(set1, set2);
 }
 
+template <typename T>
+inline bool is_any_of(const T& value, const std::vector<T>& values)
+{
+    return std::find(values.begin(), values.end(), value) != values.end();
+}
+
 
 // List
 

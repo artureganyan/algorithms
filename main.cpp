@@ -120,6 +120,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(count_complete_tree_nodes);
 //ADD_TEST(rectangle_area);
 //ADD_TEST(basic_calculator_2);
-ADD_TEST(summary_ranges);
+//ADD_TEST(summary_ranges);
+ADD_TEST(find_peak_element);
 
 RUN_TESTS();

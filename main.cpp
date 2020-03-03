@@ -121,6 +121,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(rectangle_area);
 //ADD_TEST(basic_calculator_2);
 //ADD_TEST(summary_ranges);
-ADD_TEST(find_peak_element);
+//ADD_TEST(find_peak_element);
+ADD_TEST(kth_smallest_element_in_a_bst);
 
 RUN_TESTS();

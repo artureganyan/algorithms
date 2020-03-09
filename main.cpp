@@ -123,6 +123,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(summary_ranges);
 //ADD_TEST(find_peak_element);
 //ADD_TEST(kth_smallest_element_in_a_bst);
-ADD_TEST(lowest_common_ancestor_of_a_binary_tree);
+//ADD_TEST(lowest_common_ancestor_of_a_binary_tree);
+ADD_TEST(product_of_array_except_self);
 
 RUN_TESTS();

@@ -9,8 +9,8 @@ namespace different_ways_to_add_parentheses {
 class Solution {
 public:
     // Note: The expression must be valid and contain only the following
-    // operators: +, -, *. If the expression is empty, returns empty
-    // result.
+    // operators: +, -, *. All operands must fit into int. If the expression
+    // is empty, returns empty result.
     //
     std::vector<int> run(const std::string& expression)
     {
@@ -130,7 +130,7 @@ int main()
     ASSERT( compare_sets(Solution().run("1+2*3-4"), {-1, 3, -3, 5, 3}) );
 
     const int MAX = std::numeric_limits<int>::max();
-    const int MIN = std::numeric_limits<int>::max();
+    const int MIN = std::numeric_limits<int>::min();
 
     ASSERT( compare_sets(Solution().run(to_string(MAX) + "+0"), {MAX}) );
     ASSERT( compare_sets(Solution().run(to_string(MAX) + "-1"), {MAX-1}) );

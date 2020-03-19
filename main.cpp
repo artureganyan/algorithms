@@ -125,6 +125,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(kth_smallest_element_in_a_bst);
 //ADD_TEST(lowest_common_ancestor_of_a_binary_tree);
 //ADD_TEST(product_of_array_except_self);
-ADD_TEST(different_ways_to_add_parentheses);
+//ADD_TEST(different_ways_to_add_parentheses);
+ADD_TEST(h_index);
 
 RUN_TESTS();

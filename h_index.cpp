@@ -8,16 +8,17 @@ namespace h_index {
 
 class Solution {
 public:
-    // Note: The citations should contain non-negative integers only. But, if
-    // it will contain negative values, they will be handled the same way as 0.
+    // Note: The citations should contain non-negative integers only. If it
+    // will contain negative values, they will be handled the same way as 0.
     // If the citations are empty or contain no positive values, returns 0.
     //
-    // Time: O(n), Space: O(1), n - number of elements
+    // Time: O(n * log(n)), Space: O(1), n - number of elements
     //
     int run(std::vector<int>& citations)
     {
         std::sort(citations.begin(), citations.end());
 
+        // Note: The search could be done in O(log(n)) time, as in h_index_2 problem
         for (int i = 0; i < citations.size(); i++) {
             const int h_index = citations.size() - i;
             if (citations[i] >= h_index)

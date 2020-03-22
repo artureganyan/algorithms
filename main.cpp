@@ -127,6 +127,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(product_of_array_except_self);
 //ADD_TEST(different_ways_to_add_parentheses);
 //ADD_TEST(h_index);
-ADD_TEST(h_index_2);
+//ADD_TEST(h_index_2);
+ADD_TEST(peeking_iterator);
 
 RUN_TESTS();

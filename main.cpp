@@ -129,6 +129,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(h_index);
 //ADD_TEST(h_index_2);
 //ADD_TEST(peeking_iterator);
-ADD_TEST(game_of_life);
+//ADD_TEST(game_of_life);
+ADD_TEST(longest_increasing_subsequence);
 
 RUN_TESTS();

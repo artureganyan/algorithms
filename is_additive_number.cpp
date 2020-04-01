@@ -6,17 +6,95 @@
 namespace is_additive_number {
 
 // Note: It's not clear if '0' should be treated as a valid number in this
-// problem. It is valid in the current implementation.
+// problem. It is valid in the current implementations.
 
-// Straightforward recursive solution
 
-class Solution {
+class Solution1 {
 public:
-    typedef int Number;
-
     // Note: The string must contain only the digits '0'-'9'. Any substring
     // starting with '0', except the single '0', is not treated as a number.
-    // Numbers and sums greater than Number are not handled.
+    // Numbers and sums greater than int are not handled.
+    //
+    bool run(const std::string& num)
+    {
+        // Idea:
+        // The source string can represent many sequences of numbers, but each
+        // additive sequence is generated from its 1st and 2nd number. So, we
+        // only need to iterate over all possible (1st, 2nd) pairs, and check
+        // the rest part according to them.
+
+        // All 1st numbers
+        for (int i1 = 0, n1 = 0; i1 < num.size(); i1++) {
+            if (!append_digit(n1, num[i1], i1))
+                return false;
+
+            // All 2nd numbers
+            for (int i2 = i1 + 1, n2 = 0; i2 < num.size(); i2++) {
+                if (!append_digit(n2, num[i2], i2 - i1 - 1))
+                    break;
+
+                // Check the rest numbers
+                for (int i3 = i2 + 1, i3_0 = i3, v1 = n1, v2 = n2, v3 = 0; i3 < num.size(); i3++) {
+                    if (!append_digit(v3, num[i3], i3 - i3_0))
+                        break;
+
+                    int v12 = 0;
+                    if (!sum(v12, v1, v2))
+                        break;
+
+                    if (v3 == v12) {
+                        if (i3 == num.size() - 1)
+                            return true;
+                        v1   = v2;
+                        v2   = v3;
+                        v3   = 0;
+                        i3_0 = i3 + 1;
+
+                    } else if (v3 > v12) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+private:
+    static bool append_digit(int& n, char digit, int digit_index)
+    {
+        if (digit < '0' || digit > '9')
+            throw std::runtime_error("Non-digit characters are not supported");
+
+        // Don't allow leading zero (except single 0)
+        if (n == 0 && digit_index > 0)
+            return false;
+
+        if (n > 0 && std::numeric_limits<int>::max() / n < 10)
+            return false;
+
+        n = n * 10 + (digit - '0');
+        return true;
+    }
+
+    static bool sum(int& s, int v1, int v2)
+    {
+        if (std::numeric_limits<int>::max() - v1 < v2)
+            return false;
+
+        s = v1 + v2;
+        return true;
+    }
+};
+
+
+// Recursive solution
+
+class Solution2 {
+public:
+    // Note: The string must contain only the digits '0'-'9'. Any substring
+    // starting with '0', except the single '0', is not treated as a number.
+    // Numbers and sums greater than int are not handled.
     //
     bool run(const std::string& num)
     {
@@ -24,7 +102,7 @@ public:
     }
 
 private:
-    bool isAdditiveNumber(const std::string& s, Number n1, Number n2, int n3_start, int n_count) const
+    bool isAdditiveNumber(const std::string& s, int n1, int n2, int n3_start, int n_count) const
     {
         if (n3_start > s.size())
             throw std::runtime_error("Incorrect start position");
@@ -32,20 +110,20 @@ private:
         if (n3_start == s.size())
             return n_count >= 3;
 
-        const Number Number_max = std::numeric_limits<Number>::max();
+        const int Number_max = std::numeric_limits<int>::max();
 
-        // n1 + n2 does not fit into Number
+        // n1 + n2 does not fit into int
         if (Number_max - n1 < n2)
             return false;
 
-        const Number sum12 = n1 + n2;
+        const int sum12 = n1 + n2;
 
         for (int i = n3_start, n3 = 0; i < s.size(); i++) {
             // n3 has leading "0", don't continue
             if (n3 == 0 && i > n3_start)
                 return false;
 
-            // The current digit does not fit into Number
+            // The current digit does not fit into int
             if (n3 > 0 && Number_max / n3 < 10)
                 return false;
 
@@ -65,7 +143,9 @@ private:
     }
 };
 
-int main()
+
+template <typename Solution>
+void test()
 {
     ASSERT( Solution().run(std::string()) == false );
 
@@ -110,6 +190,20 @@ int main()
     ASSERT( Solution().run("0" + to_string(MAX) + to_string(MAX)) == true );
     ASSERT( Solution().run("1" + to_string(MAX - 1) + to_string(MAX)) == true );
     ASSERT( Solution().run(to_string(MAX / 2) + to_string(MAX / 2) + to_string(MAX / 2 + MAX / 2)) == true );
+
+    // Test for overflow: MAX9 + 1 != 0. MAX9 is the maximum integer with "9"
+    // appended to the end, e.g. "21474836479" if the solution uses 32-bit
+    // signed int. If such a string is converted to the integer without overflow
+    // check, it will be -1 (MAX9 is MAX * 10 + 9, which is -10 + 9 = -1), so
+    // MAX9 + 1 will be 0.
+
+    ASSERT( Solution().run(to_string(MAX) + "910") == false );
+}
+
+int main()
+{
+    test<Solution1>();
+    test<Solution2>();
 
     return 0;
 }

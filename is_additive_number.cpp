@@ -1,4 +1,4 @@
-// Problem: https://leetcode.com/problems/additive-number/
+﻿// Problem: https://leetcode.com/problems/additive-number/
 
 #include <string>
 #include "utils.h"
@@ -14,6 +14,24 @@ public:
     // Note: The string must contain only the digits '0'-'9'. Any substring
     // starting with '0', except the single '0', is not treated as a number.
     // Numbers and sums greater than int are not handled.
+    //
+    // Time: O(1), Space: O(1)
+    //
+    // Note:
+    // The time complexity is estimated as follows:
+    // 1. Each number is limited by d decimal digits, where d is 10 for 32-bit
+    //    signed int.
+    // 2. Each sequence is generated from its 1st and 2nd number, so there are
+    //    no more than d*d sequences to check.
+    // 3. Each next number of the sequence is <= 2 times greater than the
+    //    previous one, ~1.5 times in average, so one more decimal digit
+    //    appears approximately every ceil(log(10, 1.5)) numbers. Considering
+    //    the point 1, this gives the maximum sequence size of about
+    //    s_n = ceil(log(10, 1.5))*d numbers and s_d = s_n*d/2 digits.
+    // 4. Checking the most of the sequences will fail likely after the first few
+    //    numbers. The other sequences may take longer check to fail, but < s_d
+    //    digits. So the total checked digits is expected to be k*s_d, k <= d*d.
+    //    This does not depend on the string length (if it's >= s_d).
     //
     bool run(const std::string& num)
     {
@@ -95,6 +113,10 @@ public:
     // Note: The string must contain only the digits '0'-'9'. Any substring
     // starting with '0', except the single '0', is not treated as a number.
     // Numbers and sums greater than int are not handled.
+    //
+    // Time: O(1), Space: O(1), Recursion depth <= n + 2, n - number of digits
+    //
+    // Note: See the Solution1 for explanation.
     //
     bool run(const std::string& num)
     {

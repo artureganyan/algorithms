@@ -41,17 +41,17 @@ public:
         // only need to iterate over all possible (1st, 2nd) pairs, and check
         // the rest part according to them.
 
-        // All 1st numbers
+        // 1st number: [0, i1]
         for (int i1 = 0, n1 = 0; i1 < num.size(); i1++) {
             if (!append_digit(n1, num[i1], i1))
                 return false;
 
-            // All 2nd numbers
+            // 2nd number: (i1, i2]
             for (int i2 = i1 + 1, n2 = 0; i2 < num.size(); i2++) {
                 if (!append_digit(n2, num[i2], i2 - i1 - 1))
                     break;
 
-                // Check the rest numbers
+                // Check the sequence, by triplets: v1, v2, v3
                 for (int i3 = i2 + 1, i3_0 = i3, v1 = n1, v2 = n2, v3 = 0; i3 < num.size(); i3++) {
                     if (!append_digit(v3, num[i3], i3 - i3_0))
                         break;
@@ -141,7 +141,7 @@ private:
         const int sum12 = n1 + n2;
 
         for (int i = n3_start, n3 = 0; i < s.size(); i++) {
-            // n3 has leading "0", don't continue
+            // n3 has leading '0', don't continue
             if (n3 == 0 && i > n3_start)
                 return false;
 
@@ -162,6 +162,86 @@ private:
             }
         }
         return false;
+    }
+};
+
+
+// Supports numbers of arbitrary length
+
+class Solution3 {
+public:
+    // Note: The string must contain only the digits '0'-'9'. Any substring
+    // starting with '0', except the single '0', is not treated as a number.
+    //
+    bool run(const std::string& num)
+    {
+        // 1st number: [0, i1]
+        for (int i1 = 0; i1 < num.size(); i1++) {
+
+            // 2nd number: (i1, i2]
+            for (int i2 = i1 + 1; i2 < num.size(); i2++) {
+
+                // Check the sequence, by triplets: (n0, n1], (n1, n2], (n2, n3]
+                for (int n0 = -1, n1 = i1, n2 = i2, n3 = i2 + 1; n3 < num.size();) {
+                    std::string num12 = sum(num, n0 + 1, n1 + 1, n1 + 1, n2 + 1);
+                    n3 += num12.size() - 1;
+
+                    // n3 has not enough digits
+                    if (n3 >= num.size())
+                        break;
+
+                    // n3 has leading '0'
+                    if (num12.size() > 1 && num[n2 + 1] == '0')
+                        break;
+
+                    std::string num3(num.begin() + n2 + 1, num.begin() + n3 + 1);
+                    if (num3 != num12)
+                        break;
+
+                    n0 = n1;
+                    n1 = n2;
+                    n2 = n3;
+                    n3++;
+
+                    if (n3 >= num.size())
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+private:
+    // Returns s[i11, i12) + s[i21, i22)
+    static std::string sum(const std::string& s, int i11, int i12, int i21, int i22)
+    {
+        if (i11 >= i12 || i21 >= i22)
+            return {};
+
+        std::string sum;
+        sum.reserve(std::max(i12 - i11, i22 - i21) + 1);
+
+        int carry = 0;
+        for (int di1 = i12 - 1, di2 = i22 - 1; di1 >= i11 || di2 >= i21; di1--, di2--) {
+            const int d1 = di1 >= i11 ? s[di1] - '0' : 0;
+            const int d2 = di2 >= i21 ? s[di2] - '0' : 0;
+
+            int d = d1 + d2 + carry;
+            if (d >= 10) {
+                d -= 10;
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+
+            sum += '0' + d;
+        }
+        if (carry)
+            sum += '0' + carry;
+
+        std::reverse(sum.begin(), sum.end());
+        return sum;
     }
 };
 
@@ -220,12 +300,16 @@ void test()
     // MAX9 + 1 will be 0.
 
     ASSERT( Solution().run(to_string(MAX) + "910") == false );
+
+    // The long sequence generated from 1 1. Each number fits into 32-bit signed int.
+    ASSERT( Solution().run("112358132134558914423337761098715972584418167651094617711286574636875025121393196418317811514229832040134626921783093524578570288792274651493035224157817390881696324598610233415516558014126791429643349443770140873311349031701836311903") == true );
 }
 
 int main()
 {
     test<Solution1>();
     test<Solution2>();
+    test<Solution3>();
 
     return 0;
 }

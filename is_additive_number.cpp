@@ -173,6 +173,22 @@ public:
     // Note: The string must contain only the digits '0'-'9'. Any substring
     // starting with '0', except the single '0', is not treated as a number.
     //
+    // Time: O(n^3), Space: O(n), n - number of digits
+    //
+    // Note: Although iterating over each pair (1st number, 2nd number) should
+    // take O(n^2) because the most of the sequences are "wrong" (i.e. not
+    // additive) right at the first few numbers, checking these numbers requires
+    // at least 1st_size + 2nd_size time (to do "1st + 2nd"). So, for the 1st
+    // number of 1 digit, it takes about (1+1) + (1+2) + ... + (1+n-1) = O(n^2)
+    // time to check all possible 2nd numbers; for the 1st number of 2 digits -
+    // about (2+1) + (2+2) + ... + (2+n-2) = O(n^2); and so on until the 1st
+    // number of n-1 digits, resulting in O(n^3) overall time (actually, the
+    // 1st or 2nd number of more than n/2 digits make no sense because the 3rd
+    // number will not have enough digits to be equal to 1st + 2nd; but this
+    // does not change the time complexity). Also, even if somehow all the
+    // sequences would be additive and we would check all of them, this would
+    // also require O(n^3) time because checking the sequence is O(n).
+    //
     bool run(const std::string& num)
     {
         // 1st number: [0, i1]
@@ -181,29 +197,28 @@ public:
             // 2nd number: (i1, i2]
             for (int i2 = i1 + 1; i2 < num.size(); i2++) {
 
-                // Check the sequence, by triplets: (n0, n1], (n1, n2], (n2, n3]
-                for (int n0 = -1, n1 = i1, n2 = i2, n3 = i2 + 1; n3 < num.size();) {
-                    std::string num12 = sum(num, n0 + 1, n1 + 1, n1 + 1, n2 + 1);
-                    n3 += num12.size() - 1;
+                // Check the sequence, by triplets: [n1, n2), [n2, n3), [n3, n4)
+                for (int n1 = 0, n2 = i1 + 1, n3 = i2 + 1, n4 = i2 + 1; n4 < num.size();) {
+                    std::string num12 = sum(num, n1, n2, n2, n3);
+                    n4 += num12.size();
 
                     // n3 has not enough digits
-                    if (n3 >= num.size())
+                    if (n4 > num.size())
                         break;
 
                     // n3 has leading '0'
-                    if (num12.size() > 1 && num[n2 + 1] == '0')
+                    if ((n4 - n3) > 1 && num[n3] == '0')
                         break;
 
-                    std::string num3(num.begin() + n2 + 1, num.begin() + n3 + 1);
+                    std::string num3(num.begin() + n3, num.begin() + n4);
                     if (num3 != num12)
                         break;
 
-                    n0 = n1;
                     n1 = n2;
                     n2 = n3;
-                    n3++;
+                    n3 = n4;
 
-                    if (n3 >= num.size())
+                    if (n4 == num.size())
                         return true;
                 }
             }
@@ -213,19 +228,19 @@ public:
     }
 
 private:
-    // Returns s[i11, i12) + s[i21, i22)
-    static std::string sum(const std::string& s, int i11, int i12, int i21, int i22)
+    // Returns s[a1, a2) + s[b1, b2)
+    static std::string sum(const std::string& s, int a1, int a2, int b1, int b2)
     {
-        if (i11 >= i12 || i21 >= i22)
+        if (a1 >= a2 || b1 >= b2)
             return {};
 
         std::string sum;
-        sum.reserve(std::max(i12 - i11, i22 - i21) + 1);
+        sum.reserve(std::max(a2 - a1, b2 - b1) + 1);
 
         int carry = 0;
-        for (int di1 = i12 - 1, di2 = i22 - 1; di1 >= i11 || di2 >= i21; di1--, di2--) {
-            const int d1 = di1 >= i11 ? s[di1] - '0' : 0;
-            const int d2 = di2 >= i21 ? s[di2] - '0' : 0;
+        for (int ai = a2 - 1, bi = b2 - 1; ai >= a1 || bi >= b1; ai--, bi--) {
+            const int d1 = ai >= a1 ? s[ai] - '0' : 0;
+            const int d2 = bi >= b1 ? s[bi] - '0' : 0;
 
             int d = d1 + d2 + carry;
             if (d >= 10) {

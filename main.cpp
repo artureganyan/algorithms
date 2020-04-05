@@ -132,6 +132,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(game_of_life);
 //ADD_TEST(longest_increasing_subsequence);
 //ADD_TEST(range_sum_query_2d_immutable);
-ADD_TEST(is_additive_number);
+//ADD_TEST(is_additive_number);
+ADD_TEST(range_sum_query_mutable);
 
 RUN_TESTS();

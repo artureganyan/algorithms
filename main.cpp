@@ -133,6 +133,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(longest_increasing_subsequence);
 //ADD_TEST(range_sum_query_2d_immutable);
 //ADD_TEST(is_additive_number);
-ADD_TEST(range_sum_query_mutable);
+//ADD_TEST(range_sum_query_mutable);
+ADD_TEST(best_time_to_buy_and_sell_stock_with_cooldown);
 
 RUN_TESTS();

@@ -45,6 +45,36 @@ public:
     // Time: O(n * log(n)), Space: O(n), n - number of integers
     int run(const std::vector<int>& nums)
     {
+        // Idea:
+        // Let's note the following:
+        // 1. For each number nums[i], there are one or more increasing
+        //    sequences of the maximum length that end at nums[i] (at least, of
+        //    the length 1). We only need to remember the length, not the
+        //    sequences.
+        // 2. If, on some range [0, i), there are two increasing sequences of
+        //    the same maximum length, only the one which ends at the lower
+        //    number matters - any number on [i, n) that continues the "higher"
+        //    sequence also continues the "lower" one, but not vice versa.
+        //
+        // So, if we iterate the numbers from 0 to n-1, then at step i we have
+        // at most i increasing sequences of different lengths (follows from 1),
+        // such that the longer sequence ends at the larger number (follows
+        // from 2). The nums[i] must continue the longest possible sequence,
+        // i.e. which ends at the largest number n < nums[i]. Since its length
+        // is increased by 1, then, if there is another sequence of this length
+        // which ends at the number > nums[i], it can be forgotten:
+        //
+        // nums[i]                  | Step | Sequences (ends at -> length)
+        //  7|                      | 0    | 1 -> 1
+        //  6|     *                | 1    | 1 -> 1, 3 -> 2
+        //  5|       *              | 2    | 1 -> 1, 3 -> 2, 6 -> 3
+        //  4|         *     *      | 3    | 1 -> 1, 3 -> 2, 5 -> 3
+        //  3|   *         *        | 4    | 1 -> 1, 3 -> 2, 4 -> 3
+        //  2|           *          | 5    | 1 -> 1, 2 -> 2, 4 -> 3
+        //  1| *                    | 6    | 1 -> 1, 2 -> 2, 3 -> 3
+        //    -----------------> i  | 7    | 1 -> 1, 2 -> 2, 3 -> 3, [4 -> 4]
+        //     0 1 2 3 4 5 6 7
+
         if (!nums.size())
             return 0;
 
@@ -57,9 +87,11 @@ public:
             const int n  = nums[i];
             auto      ni = max_lengths.lower_bound(n);
 
+            // The sequence ending at n already exists
             if (ni != max_lengths.end() && ni->first == n)
                 continue;
 
+            // Continue the sequence ending at the largest number which is < n
             int max_length = 0;
             if (max_lengths.size() && ni != max_lengths.begin())
                 max_length = std::prev(ni)->second;
@@ -67,10 +99,12 @@ public:
 
             ni = max_lengths.insert(std::make_pair(n, max_length)).first;
 
+            // If there is a "higher" sequence with the same length, remove it
             ni = std::next(ni);
             if (ni != max_lengths.end() && ni->second == max_length)
                 max_lengths.erase(ni);
 
+            // Update the total maximum
             result = std::max(result, max_length);
         }
 

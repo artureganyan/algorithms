@@ -71,7 +71,7 @@ private:
     int countNodesInPerfectTree(int levels) const
     {
         if (levels < 0)
-            return 0;
+            throw std::runtime_error("Tree levels must be >= 0");
 
         return std::pow(2, levels) - 1;
     }

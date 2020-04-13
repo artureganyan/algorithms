@@ -17,6 +17,9 @@ public:
         if (!grid.size() || !grid[0].size())
             return;
 
+        // If a cell should change, mark it by the intermediate value. This
+        // value has the same "alive" property as the previous one, so the cell
+        // looks unchanged for its neighbors, making the update simultaneous.
         for (int r = 0; r < grid.size(); r++) {
             for (int c = 0; c < grid[r].size(); c++) {
                 const int live_neighbours = countLiveNeighbors(grid, r, c);
@@ -32,6 +35,7 @@ public:
             }
         }
 
+        // Replace intermediate values with the required ones
         for (int r = 0; r < grid.size(); r++) {
             for (int c = 0; c < grid[r].size(); c++) {
                 int& cell = grid[r][c];

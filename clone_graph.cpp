@@ -157,16 +157,8 @@ int main()
 {
     ASSERT( Solution().run(nullptr) == nullptr );
 
+    // Undirected graphs
     test( new Node{1} );
-    test( new Node{1, {new Node{2}}} );
-    test( new Node{1, {new Node{2}, new Node{3}}} );
-    test( new Node{1, {new Node{2, {new Node{3}}}}} );
-
-    {
-        Node* n1 = new Node{1};
-        n1->neighbors = {n1};
-        test(n1);
-    }
 
     {
         Node* n1 = new Node{1};
@@ -183,6 +175,37 @@ int main()
         n1->neighbors = {n2, n3};
         n2->neighbors = {n1, n3};
         n3->neighbors = {n1, n2};
+        test(n1);
+    }
+
+    // Directed graphs
+    test( new Node{1, {new Node{2}}} );
+    test( new Node{1, {new Node{2}, new Node{3}}} );
+    test( new Node{1, {new Node{2, {new Node{3}}}}} );
+
+    {
+        Node* n1 = new Node{1};
+        Node* n2 = new Node{2};
+        Node* n3 = new Node{3};
+        n1->neighbors = {n2};
+        n2->neighbors = {n3};
+        n3->neighbors = {n1};
+        test(n1);
+    }
+
+    // Loop
+    {
+        Node* n1 = new Node{1};
+        n1->neighbors = {n1};
+        test(n1);
+    }
+
+    // Repeated edge
+    {
+        Node* n1 = new Node{1};
+        Node* n2 = new Node{2};
+        n1->neighbors = {n2, n2};
+        n2->neighbors = {n1};
         test(n1);
     }
 

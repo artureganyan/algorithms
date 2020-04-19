@@ -135,6 +135,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(is_additive_number);
 //ADD_TEST(range_sum_query_mutable);
 //ADD_TEST(best_time_to_buy_and_sell_stock_with_cooldown);
-ADD_TEST(minimum_height_trees);
+//ADD_TEST(minimum_height_trees);
+ADD_TEST(maximum_product_of_word_lengths);
 
 RUN_TESTS();

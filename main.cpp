@@ -138,6 +138,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(minimum_height_trees);
 //ADD_TEST(maximum_product_of_word_lengths);
 //ADD_TEST(bulb_switcher);
-ADD_TEST(coin_change);
+//ADD_TEST(coin_change);
+ADD_TEST(wiggle_sort_2);
 
 RUN_TESTS();

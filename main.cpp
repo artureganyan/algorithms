@@ -139,6 +139,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(maximum_product_of_word_lengths);
 //ADD_TEST(bulb_switcher);
 //ADD_TEST(coin_change);
-ADD_TEST(wiggle_sort_2);
+//ADD_TEST(wiggle_sort_2);
+ADD_TEST(odd_even_linked_list);
 
 RUN_TESTS();

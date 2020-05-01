@@ -141,6 +141,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(coin_change);
 //ADD_TEST(wiggle_sort_2);
 //ADD_TEST(odd_even_linked_list);
-ADD_TEST(verify_preorder_serialization_of_a_binary_tree);
+//ADD_TEST(verify_preorder_serialization_of_a_binary_tree);
+ADD_TEST(reconstruct_itinerary);
 
 RUN_TESTS();

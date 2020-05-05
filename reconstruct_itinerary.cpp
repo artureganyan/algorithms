@@ -56,12 +56,19 @@ public:
                     used_tickets_map[path[i - 1]][path[i]]--;
             }
             path.resize(station.path_size);
+
+            // Mark the current ticket as used, and add the station to the path
+            if (path.size())
+                used_tickets_map[path.back()][station.name]++;
             path.push_back(station.name);
+
+            // If the path uses each ticket, return it
+            if (path.size() == tickets.size() + 1)
+                return path;
 
             // Add next stations to the queue
             const auto& station_tickets      = tickets_map[station.name];
             auto&       used_station_tickets = used_tickets_map[station.name];
-            int         new_next_stations    = 0;
 
             for (auto tickets = station_tickets.rbegin(); tickets != station_tickets.rend(); tickets++) {
                 const auto& target      = tickets->first;
@@ -70,20 +77,6 @@ public:
                     continue;
 
                 next_stations.push_back({target, (int) path.size()});
-                new_next_stations++;
-            }
-
-            // We have new next stations, so mark the next ticket as used
-            if (new_next_stations > 0) {
-                used_station_tickets[next_stations.back().name]++;
-
-            // We have no next station, so stop if the path uses each ticket
-            } else if (path.size() == tickets.size() + 1) {
-                return path;
-
-            // The path is finished but does not use each ticket
-            } else {
-                // Continue searching
             }
         }
 

@@ -142,6 +142,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(wiggle_sort_2);
 //ADD_TEST(odd_even_linked_list);
 //ADD_TEST(verify_preorder_serialization_of_a_binary_tree);
-ADD_TEST(reconstruct_itinerary);
+//ADD_TEST(reconstruct_itinerary);
+ADD_TEST(increasing_triplet_subsequence);
 
 RUN_TESTS();

@@ -144,6 +144,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(verify_preorder_serialization_of_a_binary_tree);
 //ADD_TEST(reconstruct_itinerary);
 //ADD_TEST(increasing_triplet_subsequence);
-ADD_TEST(counting_bits);
+//ADD_TEST(counting_bits);
+ADD_TEST(flatten_nested_list_iterator);
 
 RUN_TESTS();

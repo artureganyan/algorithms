@@ -145,6 +145,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(reconstruct_itinerary);
 //ADD_TEST(increasing_triplet_subsequence);
 //ADD_TEST(counting_bits);
-ADD_TEST(flatten_nested_list_iterator);
+//ADD_TEST(flatten_nested_list_iterator);
+ADD_TEST(integer_break);
 
 RUN_TESTS();

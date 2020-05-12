@@ -1,4 +1,4 @@
-// Problem: https://leetcode.com/problems/integer-break/
+﻿// Problem: https://leetcode.com/problems/integer-break/
 
 #include <vector>
 #include "utils.h"
@@ -11,6 +11,8 @@ class Solution1 {
 public:
     // Note: If n <= 1, returns 0. If the result does not fit into int, it's
     // undefined (for 32-bit signed int, n must be <= 58).
+    //
+    // Time: O(n^2), Space: O(n), Recursion depth <= 4
     //
     int run(int n)
     {
@@ -34,9 +36,20 @@ private:
 
         int result = 0;
 
+        // The recursion depth depends on the order of recursive calls here.
+        // If do them for 0, 1, ..., n-1, then the call for i depends on the
+        // results for 0, 1, ..., i-1, which are ready at the moment of call,
+        // so the depth is 3 (including the initial call). If do for n-1, n-2,
+        // ..., 0, then the call for n-1 depends on n-2, which depends on n-3,
+        // and so on down to 0, giving the depth of n+1. In both cases, the
+        // total number of calls is the same: n*(n+1)/2+1.
+#if 1
+        for (int i = n; i >= 1; i--)
+            result = std::max(result, i * getMaximumProduct(n - i, count + 1, results));
+#else
         for (int i = 1; i <= n; i++)
             result = std::max(result, i * getMaximumProduct(n - i, count + 1, results));
-
+#endif
         results[n] = result;
         return result;
     }
@@ -49,6 +62,8 @@ class Solution2 {
 public:
     // Note: If n <= 1, returns 0. If the result does not fit into int, it's
     // undefined (for 32-bit signed int, n must be <= 58).
+    //
+    // Time: O(n^2), Space: O(n)
     //
     int run(int n)
     {

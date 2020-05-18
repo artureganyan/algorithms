@@ -147,6 +147,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(counting_bits);
 //ADD_TEST(flatten_nested_list_iterator);
 //ADD_TEST(integer_break);
-ADD_TEST(top_k_frequent_elements);
+//ADD_TEST(top_k_frequent_elements);
+ADD_TEST(count_numbers_with_unique_digits);
 
 RUN_TESTS();

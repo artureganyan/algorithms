@@ -5,14 +5,15 @@
 
 namespace count_numbers_with_unique_digits {
 
-// Note: There are only 9 different results (for n=1..9), so they could be
-// precalculated by any suitable solution and returned in constant time.
+// Note: There are only 10 different results (for n=1..10), so they could be
+// precalculated with any suitable solution and returned in constant time.
 
 class Solution {
 public:
-    // Note: If n <= 0, returns 0.
+    // Note: If n == 0, returns 1, because we count within [0, 1). If n < 0,
+    // returns 0.
     //
-    // Time: O(1) for arbitrary n; ~k*n^2 arithmetic operations for n=0..9
+    // Time: O(1) for arbitrary n; ~k*n^2 arithmetic operations for n=0..10
     // Space: O(1)
     //
     int run(int n)
@@ -24,14 +25,17 @@ public:
         // count of the numbers with n unique digits is 9*9*8*7*...*(11-n) if
         // n >= 2, and 10 if n == 1. Since we need to count within [0, 10^n),
         // the result is the sum of the counts for n, n-1, ..., 1 digits.
-        // Finally, any number with n > 9 digits contains duplicated digits, so
-        // n can be limited by 9.
+        // Finally, any number with n > 10 digits contains duplicated digits,
+        // so n can be limited by 10.
 
-        if (n <= 0)
+        if (n < 0)
             return 0;
 
-        if (n > 9)
-            n = 9;
+        if (n == 0)
+            return 1;
+
+        if (n > 10)
+            n = 10;
 
         int result = 0;
         for (int i = n; i >= 2; i--) {
@@ -48,32 +52,32 @@ public:
 
 
 // Brute-force implementation for tests
-int countNumbersWithUniqueDigits(int n)
+long long countNumbersWithUniqueDigits(int n)
 {
-    const int total   = std::pow(10, n);
-    int       repeats = 0;
+    const long long total  = std::pow(10, n);
+    long long       result = 0;
 
-    for (int i = 0; i < total; i++) {
+    for (long long i = 0; i < total; i++) {
         bool digits[10] = {false};
-        int  x = i;
+        long long x = i;
         while (x) {
             const int d = x % 10;
-            if (digits[d]) {
-                repeats++;
+            if (digits[d])
                 break;
-            }
             digits[d] = true;
             x /= 10;
         }
+        if (!x)
+            result++;
     }
 
-    return total - repeats;
+    return result;
 }
 
 int main()
 {
     // The expected results were obtained by countNumbersWithUniqueDigits()
-    ASSERT( Solution().run(0) == 0 );
+    ASSERT( Solution().run(0) == 1 );
     ASSERT( Solution().run(1) == 10 );
     ASSERT( Solution().run(2) == 91 );
     ASSERT( Solution().run(3) == 739 );
@@ -83,10 +87,11 @@ int main()
     ASSERT( Solution().run(7) == 712891 );
     ASSERT( Solution().run(8) == 2345851 );
     ASSERT( Solution().run(9) == 5611771 );
-    ASSERT( Solution().run(10) == Solution().run(9) );
+    ASSERT( Solution().run(10) == 8877691 );
+    ASSERT( Solution().run(11) == Solution().run(10) );
 
     const int MAX = std::numeric_limits<int>::max();
-    ASSERT( Solution().run(MAX) == Solution().run(9) );
+    ASSERT( Solution().run(MAX) == Solution().run(10) );
 
     return 0;
 }

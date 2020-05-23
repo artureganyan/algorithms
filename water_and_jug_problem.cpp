@@ -15,6 +15,30 @@ public:
     //
     int run(int x, int y, int z)
     {
+        // Idea:
+        // If z is not equal to x, y or x+y, we have 2 possible ways to get z
+        // from x and y: pour x into y multiple times, or vice versa. Each way
+        // is to pour water in one particular direction, because pouring in
+        // both directions (like x -> y and then y -> x) has no sense.
+        //
+        // Let's say x is the largest jug. Then these 2 ways look as follows:
+        // 1. Fill x, and then pour x into y and empty y, until x becomes empty.
+        //    This is x -= y, giving ceil(x/y) different amounts of water. Also,
+        //    the last amount (which is <= y) can be combined with the full x,
+        //    giving one more different amount x + y.
+        // 2. Fill y, pour y into x and, if x becomes full, empty x and pour
+        //    the remainder of y into x. This is x = (x + y) mod x, or, which
+        //    is the same, x = i*y mod x, i >= 1. This gives at most x different
+        //    amounts of water, because x*y mod x == 0. Also, every time x
+        //    becomes full, we have one more different amount x + y.
+        //
+        // Finally, we may notice that any amount produced by 1 is also
+        // produced by 2: since the last step of 1 produces x mod y, then, if
+        // there is i >= 0 such that x mod y == i*y mod x, 2 produces the same
+        // as 1 at i-th step and later. One can check that i = (x - floor(x/y))
+        // satisfies the equation. Therefore we can calculate all the different
+        // amounts produced by 2 to find the answer.
+
         if (x < 0 || y < 0 || z < 0)
             return false;
 
@@ -40,12 +64,8 @@ public:
         const int x_full = x;
         const int y_full = y; // Unused
 
-        // Since z is not equal to x, y or x+y, we have 2 possible ways to get
-        // z from x and y: pour x into y or pour y into x, multiple times. In
-        // other words, each way is to pour water in one particular direction.
-        // There is no reason to pour it in both directions (like y -> x and
-        // then x -> y), because one operation reverts the other.
-
+        // This is not necessary (see the explanation above)
+#if 0
         // Way 1, x -> y: fill x, pour x into y and empty y, i.e. do x -= y,
         // until x > y.
         for (x = x_full; x > y; x -= y) {
@@ -55,7 +75,7 @@ public:
         // Now we have x <= y, so can pour it into y and combine with full x
         if (x == z || x + x_full == z)
             return true;
-
+#endif
         // Way 2, x <- y: fill y, pour it into x and, if x becomes full, empty
         // x and pour the remainder of y into x. So we do x = (x + y) mod x,
         // or, which is the same, x = i*y mod x, i >= 1. Repeat this until we

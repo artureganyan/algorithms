@@ -117,6 +117,16 @@ inline bool is_any_of(const T& value, const std::vector<T>& values)
     return std::find(values.begin(), values.end(), value) != values.end();
 }
 
+template <typename T>
+inline bool is_any_of_sets(const T& set, const std::vector<T>& sets)
+{
+    for (const auto& s : sets) {
+        if (compare_sets(s, set))
+            return true;
+    }
+    return false;
+}
+
 
 // List
 

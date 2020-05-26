@@ -150,6 +150,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(top_k_frequent_elements);
 //ADD_TEST(count_numbers_with_unique_digits);
 //ADD_TEST(water_and_jug_problem);
-ADD_TEST(largest_divisible_subset);
+//ADD_TEST(largest_divisible_subset);
+ADD_TEST(wiggle_subsequence);
 
 RUN_TESTS();

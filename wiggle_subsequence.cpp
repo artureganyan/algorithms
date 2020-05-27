@@ -14,6 +14,36 @@ public:
     //
     int run(const std::vector<int>& nums)
     {
+        // Idea:
+        // We need to find the longest wiggle subsequence of the nums. The
+        // sequence is wiggle if it switches between increasing/decreasing on
+        // every element, i.e. n1 < n2 > n3 < ... or n1 > n2 < n3 > ... . This
+        // can be checked by just comparing each n[i] with n[i-1].
+        //
+        // If we have checked that {..., n[i-1], n[i]} is wiggle but {...,
+        // n[i-1], n[i], n[i+1]} is not, this means one of the following:
+        // 1. n[i-1] < n[i] <= n[i+1], or
+        // 2. n[i-1] > n[i] >= n[i+1]
+        // In both cases, we can remove n[i], because any n[i+2] that continues
+        // the wiggle for {n[i-1], n[i+1]}, also continues it for {n[i-1], n[i]},
+        // but not vice versa: e.g. for nums = {..., 0, 2, 3, x} remove 2,
+        // because x == 2 continues {..., 0, 3} only, and x < 2 continues
+        // both {..., 0, 2} and {..., 0, 3}.
+        //
+        // Also, if there is a wiggle sequence {n[i], n[i+1], ..., n[i+s]},
+        // none of its subsequences except {n[i], n[i+1], ..., n[i+s-1]} can
+        // have the longer wiggle continuation on n[i+s+1, end): any
+        // continuation of such a subsequence either fits the initial sequence
+        // or fits it after removing n[i+s] (as shown above). This means any
+        // wiggle sequence, probably without the last element, is a part of
+        // the longest sequence we search.
+        //
+        // Therefore, we can iterate through the nums, compare nums[i] with
+        // nums[i-1] and increase the wiggle subsequence's length every time we
+        // have a switch between increasing/decreasing. If there is no switch,
+        // nums[i-1] is considered "removed", i.e. it just does not effect the
+        // result.
+
         if (!nums.size())
             return 0;
 

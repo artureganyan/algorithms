@@ -152,6 +152,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(water_and_jug_problem);
 //ADD_TEST(largest_divisible_subset);
 //ADD_TEST(wiggle_subsequence);
-ADD_TEST(combination_sum_4);
+//ADD_TEST(combination_sum_4);
+ADD_TEST(insert_delete_getrandom_o1);
 
 RUN_TESTS();

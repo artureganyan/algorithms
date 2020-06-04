@@ -6,21 +6,20 @@
 
 namespace insert_delete_getrandom_o1 {
 
-// Time:  O(1) for insert() and remove()
-//        O(1) in average (O(n) per each n calls) for getRandom()
+// Note: The first call to getRandom() prepares randomized values in O(n) time,
+// which are returned in O(1) during n calls (including the first one). This
+// results in O(1) average time, but has the following issues:
+// 1. Values inserted after getRandom() are not returned until all the
+//    previously generated values are returned.
+// 2. If call getRandom() and then remove all the values and insert the new
+//    ones, the next getRandom() will take O(n) time again. So such getRandom()
+//    + remove() calls make getRandom() linear-time.
+//
+// Time:  O(1) in average for insert(), remove(), getRandom()
 // Space: O(n) during the object lifetime
 // n - number of elements
-//
-// Note: The first call of getRandom() prepares randomized values in O(n) time,
-// and then returns them in O(1) during n calls, resulting in O(1) average
-// time. This leads to the following issues:
-// 1. New values inserted after getRandom() are not returned until all the
-//    previously generated values are returned.
-// 2. If we call getRandom() and then remove all n values and insert n new
-//    ones, the next getRandom() will take O(n) time again. So such
-//    getRandom() + n remove() calls make getRandom() linear-time.
 
-class RandomizedSet {
+class RandomizedSet1 {
 public:
     bool insert(int value)
     {
@@ -43,25 +42,30 @@ public:
     int getRandom()
     {
         if (!values_.size())
-            throw std::out_of_range("getRandom(): Empty set");
+            throw std::out_of_range("RandomizedSet1::getRandom(): Empty set");
 
-        while (true) {
-            while (values_randomized_.size()) {
-                const auto v = values_randomized_.back();
-                values_randomized_.pop_back();
-                if (values_.find(v) == values_.end())
-                    continue;
-                return v;
-            }
+        // Remove the previously generated values that do not exist anymore
+        while (values_randomized_.size()) {
+            const auto v = values_randomized_.back();
+            if (values_.find(v) != values_.end())
+                break;
+            values_randomized_.pop_back();
+        }
 
+        // If there are no values left, generate the new ones
+        if (!values_randomized_.size()) {
             std::vector<int> values_vector(values_.begin(), values_.end());
             for (int i = 0; i < values_vector.size(); i++) {
                 const auto index = rand() % values_vector.size();
                 values_randomized_.push_back(values_vector[index]);
             }
         }
+        assert(values_randomized_.size());
 
-        throw std::runtime_error("getRandom(): Unexpected error");
+        // Return the next value
+        const auto v = values_randomized_.back();
+        values_randomized_.pop_back();
+        return v;
     }
 
 private:
@@ -70,7 +74,65 @@ private:
 };
 
 
-int main()
+// Note: This idea is found in the solutions of
+// https://leetcode.com/problems/insert-delete-getrandom-o1/: we can remove the
+// arbitrary element from the vector in O(1) time if the order of elements may
+// change, as follows:
+// vector[i] = vector.back();   // Removes i-th element by replacing it with the last one
+// vector.pop_back();           // and removing the last one
+//
+// Time:  O(1) in average for insert(), remove()
+//        O(1) for getRandom()
+// Space: O(n) during the object lifetime
+// n - number of elements
+
+class RandomizedSet2 {
+public:
+    bool insert(int value)
+    {
+        if (values_index_.find(value) != values_index_.end())
+            return false;
+
+        values_index_[value] = values_index_.size();
+        values_.push_back(value);
+
+        return true;
+    }
+
+    bool remove(int value)
+    {
+        if (values_index_.find(value) == values_index_.end())
+            return false;
+
+        const int index      = values_index_[value];
+        const int last_value = values_.back();
+
+        values_[index] = last_value;
+        values_.pop_back();
+
+        values_index_[last_value] = index;
+        values_index_.erase(value);
+
+        return true;
+    }
+
+    int getRandom()
+    {
+        if (!values_.size())
+            throw std::out_of_range("RandomizedSet2::getRandom(): Empty set");
+
+        const int index = rand() % values_.size();
+        return values_[index];
+    }
+
+private:
+    std::unordered_map<int /*value*/, int /*index*/> values_index_;
+    std::vector<int>                                 values_;
+};
+
+
+template <typename RandomizedSet>
+void test()
 {
     RandomizedSet s;
 
@@ -90,7 +152,7 @@ int main()
     ASSERT( s.getRandom() == 2 );
     ASSERT( s.remove(2) == true );
 
-    // Check probability of the randomized values
+    // Check the probability of the randomized values
     const int MAX = std::numeric_limits<int>::max();
     const int MIN = std::numeric_limits<int>::min();
 
@@ -115,6 +177,14 @@ int main()
         ASSERT_EX( expected - expected_e <= frequency && frequency <= expected + expected_e,
             to_string(v) + ", " + to_string(frequency) + " ~ " + to_string(expected) );
     }
+}
+
+int main()
+{
+    test<RandomizedSet1>();
+    test<RandomizedSet2>();
+
+    return 0;
 }
 
 }

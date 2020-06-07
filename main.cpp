@@ -18,7 +18,7 @@ static std::vector<TestEntryPoint*> tests;
     {                                               \
         int result = EXIT_SUCCESS;                  \
         for (auto test : tests) {                   \
-            if (!test())                            \
+            if (test() != 0)                        \
                 result = EXIT_FAILURE;              \
         }                                           \
         return result;                              \
@@ -153,6 +153,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(largest_divisible_subset);
 //ADD_TEST(wiggle_subsequence);
 //ADD_TEST(combination_sum_4);
-ADD_TEST(insert_delete_getrandom_o1);
+//ADD_TEST(insert_delete_getrandom_o1);
+ADD_TEST(linked_list_random_node);
 
 RUN_TESTS();

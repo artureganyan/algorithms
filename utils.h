@@ -301,6 +301,12 @@ class TemporaryList {
 public:
     TemporaryList(Node* node) : head_(node) {}
 
+    TemporaryList(TemporaryList&& other)
+    {
+        head_       = other.head_;
+        other.head_ = nullptr;
+    }
+
     ~TemporaryList()
     {
         destroy_list<Node, Traits>(head_);
@@ -356,8 +362,8 @@ std::string list_to_string(Node* head)
     return result;
 }
 
-template <typename Node, typename Traits = DefaultListTraits<Node>>
-Node* create_list(std::initializer_list<typename Traits::Value> values)
+template <typename Node, typename Container, typename Traits = DefaultListTraits<Node>>
+Node* create_list(const Container& values)
 {
     Node* head = nullptr;
     Node* prev = nullptr;
@@ -373,9 +379,21 @@ Node* create_list(std::initializer_list<typename Traits::Value> values)
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
+Node* create_list(std::initializer_list<typename Traits::Value> values)
+{
+    return create_list<Node, decltype(values), Traits>(values);
+}
+
+template <typename Node, typename Container, typename Traits = DefaultListTraits<Node>>
+TemporaryList<Node, Traits> create_temp_list(const Container& values)
+{
+    return TemporaryList<Node, Traits>(create_list<Node, Container, Traits>(values));
+}
+
+template <typename Node, typename Traits = DefaultListTraits<Node>>
 TemporaryList<Node, Traits> create_temp_list(std::initializer_list<typename Traits::Value> values)
 {
-    return TemporaryList<Node, Traits>(create_list<Node, Traits>(values));
+    return create_temp_list<Node, decltype(values), Traits>(values);
 }
 
 template <typename Node, typename Traits = DefaultListTraits<Node>>
@@ -398,7 +416,7 @@ bool compare_lists(Node* head, const Container& values)
     return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
 }
 
-template <typename Node, typename Traits = ::DefaultListTraits<Node>>
+template <typename Node, typename Traits = DefaultListTraits<Node>>
 bool compare_lists(Node* head, std::initializer_list<typename Traits::Value> values)
 {
     return list_to_vector<Node, Traits>(head) == std::vector<typename Traits::Value>(values.begin(), values.end());
@@ -531,6 +549,12 @@ template <typename Node, typename Traits = DefaultTreeTraits<Node>>
 class TemporaryTree {
 public:
     TemporaryTree(Node* root) : root_(root) {}
+
+    TemporaryTree(TemporaryTree&& other)
+    {
+        root_       = other.root_;
+        other.root_ = nullptr;
+    }
 
     ~TemporaryTree()
     {

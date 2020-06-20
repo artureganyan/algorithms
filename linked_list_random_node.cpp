@@ -12,10 +12,21 @@ struct ListNode {
     ListNode *next;
 };
 
+// Note: The problem also asks to effectively get the random node for an
+// extremely large list. But it's not clear can we iterate such a list in
+// the reasonable time, can we do this multiple times, and how often the
+// random node can be requested. The most of the solutions here suppose
+// that the list can be iterated multiple times.
 
-// Straightforward solution with linear time and constant space
+
+// Solution with linear time and constant space, requires minimum 2 passes
 
 // Note: The nodes count must remain unchanged during the object lifetime.
+//
+// Note: Some solutions provided on the problem's discussion use the reservoir
+// sampling, i.e. they don't iterate the list to know its size. This is
+// implemented in the Solution3, and may help if getRandom() is supposed to
+// be called only once.
 //
 // Time:  O(n) for constructor and getRandom()
 // Space: O(1) for constructor, getRandom() and the object lifetime
@@ -53,10 +64,12 @@ private:
 };
 
 
-// Straightforward solution with constant/linear time and linear/constant space
+// Solution with constant/linear time and linear/constant space, requires
+// minimum 2 passes
 
 // Note: The nodes count and addresses must remain unchanged during the object
-// lifetime.
+// lifetime. The capacity determines the number of nodes which are indexed to
+// speedup the node access in getRandom().
 //
 // Time:  O(n) for constructor
 //        O(n/c) for getRandom()
@@ -118,7 +131,85 @@ private:
 };
 
 
-// Solution with constant/linear time and constant space
+// Solution with linear/constant average time and constant/linear space,
+// requires at least 1 pass. Unlike the Solution1, here getRandom() iterates
+// the entire list every time it needs to prepare the result.
+
+// Note: The head address must remain unchanged during the object lifetime. The
+// capacity determines the number of random nodes which are selected on the
+// first getRandom() and then returned by further getRandom() calls. If the
+// capacity > 1, the nodes count and addresses must remain unchanged until the
+// current selection is returned.
+//
+// Time:  O(1) for constructor
+//        O(n/c) for getRandom() in average
+// Space: O(1) for constructor and getRandom()
+//        O(c) for the object lifetime
+// n - number of nodes
+// c - capacity, by default c = 1
+
+class Solution3 {
+public:
+    // If the capacity is < 0, it's set to the nodes count. If it's 0, it's set to 1.
+    Solution3(ListNode* head, int capacity = 1)
+    {
+        head_ = head;
+
+        if (capacity_ >= 0) {
+            capacity_ = std::max(capacity, 1);
+        } else {
+            capacity_ = std::numeric_limits<decltype(capacity_)>::max();
+        }
+    }
+
+    int getRandom()
+    {
+        // Idea:
+        // This is the reservoir sampling with k = capacity:
+        // https://en.wikipedia.org/wiki/Reservoir_sampling
+        // The k selected nodes then returned one by one. When sampling, the
+        // first k nodes are also shuffled, otherwise they would always go in
+        // the original order if selected.
+
+        if (!head_)
+            throw std::out_of_range("getRandom(): The list is empty");
+
+        // Prepare the result
+        if (!result_.size()) {
+            int             index = 0;
+            const ListNode* node  = head_;
+
+            // ... Get the first capacity nodes and shuffle them
+            for (; node && index < capacity_; node = node->next, index++)
+                result_.push_back(node);
+
+            std::random_shuffle(result_.begin(), result_.end());
+
+            // ... Get random nodes from the rest of the list
+            for (; node; node = node->next, index++) {
+                const int i = rand() % (index + 1);
+                if (i < result_.size())
+                    result_[i] = node;
+            }
+        }
+
+        // Return and remove a node from the result
+        assert(result_.size());
+        const ListNode* result_node = result_.back();
+        result_.pop_back();
+        return result_node->val;
+    }
+
+private:
+    const ListNode*              head_     = nullptr;
+    int                          capacity_ = 0;
+    std::vector<const ListNode*> result_;
+};
+
+
+// Solution with constant/linear time and constant space. Does not require the
+// entire pass, but does not provide the uniform distribution on all the nodes
+// for a single getRandom() call.
 
 // Note: The nodes addresses must remain unchanged during the object lifetime.
 //
@@ -129,30 +220,30 @@ private:
 // selection_size is constant, this gets the constant time complexity, but
 // also the following issues:
 // 1. The node can be selected again not earlier than after
-//    ceil(nodes_count/selection_size)-1 calls.
-// 2. For a), the nodes are never selected in their original order, but for b) 
-//    this is possible.
-// 3. On a single call, the probability of each node within the selection_size
+//    ceil(nodes_count/selection_size) calls.
+// 2. For a), there is no chance to select all the nodes in their original
+//    order, but for b) this is possible.
+// 3. On a single call, the probability of the nodes within the selection_size
 //    frame is the same, but for other nodes it's 0.
 // 4. On k*nodes_count/selection_size calls, where k is such that k*nodes_count
 //    divides by selection_size, the probability of each node:
 //    for a): is the same; each node can be selected at most k times
-//    for b): is supposed to approach the same value if k is large enough, but
-//            this SHOULD BE CHECKED
+//    for b): SHOULD BE CHECKED, maybe it approaches the same value if k is
+//            large enough
 //    
 // Time:  O(s) for constructor
 //        O(s) for getRandom()
 // Space: O(1) for constructor, getRandom() and the object lifetime
 // s - selection size
 
-// If defined, advances the selection frame by selection_size nodes on each
-// getRandom(). Otherwise, advances the frame right after the selected node.
-#define SOLUTION3_FIXED_SELECTION_FRAME
+// If defined, the selection frame is advanced by selection_size nodes on each
+// getRandom(). Otherwise, the frame is advanced right after the selected node.
+#define SOLUTION4_FIXED_SELECTION_FRAME
 
-class Solution3 {
+class Solution4 {
 public:
     // If the selection_size <= 0 or > nodes count, it's set to the nodes count
-    Solution3(ListNode* head, int selection_size)
+    Solution4(ListNode* head, int selection_size)
     {
         head_ = head;
         node_ = head;
@@ -172,7 +263,7 @@ public:
 
         const int index  = rand() % selection_size_;
         const int result = advance(node_, index)->val;
-#ifdef SOLUTION3_FIXED_SELECTION_FRAME
+#ifdef SOLUTION4_FIXED_SELECTION_FRAME
         advance(node_, selection_size_ - index);
 #else
         advance(node_, 1);
@@ -200,7 +291,7 @@ private:
 template <typename Solution, auto... args>
 void test(const std::string& name = {})
 {
-    auto test = [](const std::vector<int>& values)
+    const auto test = [](const std::vector<int>& values)
     {
         std::cout << to_string(values) << std::endl;
 
@@ -266,6 +357,7 @@ int main()
     test<Solution1>("Solution1");
 
     test<Solution2>("Solution2, capacity=default");
+    test<Solution2, -1>("Solution2, capacity=-1");
     test<Solution2, 0>("Solution2, capacity=0");
     test<Solution2, 1>("Solution2, capacity=1");
     test<Solution2, 2>("Solution2, capacity=2");
@@ -273,13 +365,23 @@ int main()
     test<Solution2, 101>("Solution2, capacity=101");
     test<Solution2, std::numeric_limits<int>::max()>("Solution2, capacity=max");
 
-    test<Solution3, 0>("Solution3, selection_size=0");
-    test<Solution3, 1>("Solution3, selection_size=1");
-    test<Solution3, 2>("Solution3, selection_size=2");
-    test<Solution3, 3>("Solution3, selection_size=3");
-    test<Solution3, 101>("Solution3, selection_size=101");
-    test<Solution3, std::numeric_limits<int>::max()>("Solution3, selection_size=max");
+    test<Solution3>("Solution3, capacity=default");
+    test<Solution3, -1>("Solution3, capacity=-1");
+    test<Solution3, 0>("Solution3, capacity=0");
+    test<Solution3, 1>("Solution3, capacity=1");
+    test<Solution3, 2>("Solution3, capacity=2");
+    test<Solution3, 3>("Solution3, capacity=3");
+    test<Solution3, 101>("Solution3, capacity=101");
+    test<Solution3, std::numeric_limits<int>::max()>("Solution3, capacity=max");
 
+    test<Solution4, -1>("Solution4, selection_size=-1");
+    test<Solution4, 0>("Solution4, selection_size=0");
+    test<Solution4, 1>("Solution4, selection_size=1");
+    test<Solution4, 2>("Solution4, selection_size=2");
+    test<Solution4, 3>("Solution4, selection_size=3");
+    test<Solution4, 101>("Solution4, selection_size=101");
+    test<Solution4, std::numeric_limits<int>::max()>("Solution4, selection_size=max");
+    
     return 0;
 }
 

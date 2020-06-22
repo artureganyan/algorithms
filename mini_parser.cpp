@@ -56,10 +56,10 @@ private:
 class Solution {
 public:
     // Note: The string must contain the following characters only: '0'-'9',
-    // '-', '[', ']', ','. It must represent either an integer or a list:
-    // "-123", "[-123, 45]". Separators are only allowed within the list. The
-    // list can be empty "[]", and can contain nested lists: "[1, [2]]". If
-    // the string is empty, returns a default-constructed nested integer.
+    // '-', '[', ']', ',' (whitespaces are not allowed). It must represent
+    // either an integer or a list: "-123", "[-123,45]". The list can be empty
+    // "[]", and can contain nested lists: "[1,[2]]". If the string is empty,
+    // returns a default-constructed nested integer.
     //
     // Time:  O(n)
     // Space: O(d_max)
@@ -162,8 +162,9 @@ int main()
     test(std::string(), {});
 
     test("0", 0);
-    test("1", 1);
-    test("-1", -1);
+    test("-0", 0);
+    test("123", 123);
+    test("-123", -123);
 
     test("[]", List{} );
     test("[[]]", List{List{}} );
@@ -176,26 +177,22 @@ int main()
     test("[[1,2]]", List{List{1, 2}});
     test("[[1],2]", List{List{1}, 2});
     test("[1,[2]]", List{1, List{2}});
+    test("[1,[2],3]", List{1, List{2}, 3});
     test("[[1],[2]]", List{List{1}, List{2}});
+    test("[[1],2,[3]]", List{List{1}, 2, List{3}});
     test("[[[1]]]", List{List{List{1}}});
+    test("[[[1]],[2]]", List{List{List{1}}, List{2}});
+    test("[[[1],2],[3],4]", List{List{List{1},2}, List{3}, 4});
 
     test("[[],1]", List{List{}, 1} );
     test("[1,[]]", List{1, List{}});
     test("[1,[],2]", List{1, List{}, 2});
 
-    test("[[0],1]", List{List{0}, 1});
-    test("[0,[1]]", List{0, List{1}});
-    test("[0,[1],2]", List{0, List{1}, 2});
-    test("[[0],1,2]", List{List{0}, 1, 2});
-    test("[[0,1],2]", List{List{0, 1}, 2});
-    test("[0,[1,2]]", List{0, List{1, 2}});
-    test("[0,1,[2]]", List{0, 1, List{2}});
-
     const int MAX = std::numeric_limits<int>::max();
     const int MIN = std::numeric_limits<int>::min();
 
-    test("[[],[" + to_string(MIN) + ",[]],0,[1,[2,[],[3],[],4],5,[6,7]],[" + to_string(MAX) + "],[]]",
-         List{List{}, List{MIN, List{}}, 0, List{1, List{2, List{}, List{3}, List{}, 4}, 5, List{6, 7}}, List{MAX}, List{}});
+    test("[[],[-1,[]],0,[1,[23,[],[456],[],78],9,[0,1]]," + to_string(MIN) + ",[" + to_string(MAX) + "],[]]",
+         List{List{}, List{-1, List{}}, 0, List{1, List{23, List{}, List{456}, List{}, 78}, 9, List{0, 1}}, MIN, List{MAX}, List{}});
 
     return 0;
 }

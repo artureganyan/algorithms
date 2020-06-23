@@ -15,6 +15,7 @@ public:
     NestedInteger(int value)
         : is_integer_(true), integer_(value) {}
 
+    // Added for test
     NestedInteger(const std::vector<NestedInteger>& list)
         : is_integer_(false), integer_(0), list_(list) {}
 
@@ -61,10 +62,21 @@ public:
     // "[]", and can contain nested lists: "[1,[2]]". If the string is empty,
     // returns a default-constructed nested integer.
     //
-    // Time:  O(n)
-    // Space: O(d_max)
-    // n     - number of characters
-    // d_max - maximum depth of the integer (1 + the maximum number of nestings),
+    // Time:  O(s*d_max^2)
+    // Space: O(d_max) for parsing, O(n) for result
+    // n     - number of integers
+    // s     - number of non-list integers and empty list integers
+    // d_max - maximum depth of the integer (1 + maximum number of nestings)
+    //
+    // Note: The time complexity is estimated as follows: a list containing s
+    // plain integers and nested at d depth is copied from bottom to top level
+    // d times. E.g. for "[[[1,2]]]" we have [1,2] -> [[1,2]] -> [[[1,2]]], d=3.
+    // Let the time to copy [1,2] be 2, then for [[1,2]] it's 3 since we also
+    // need to allocate the parent list. So the time for each step is 2 -> 3 -> 4,
+    // giving the arithmetic progression which sum to d*(s+s+d-1)/2=(s-0.5)*d+0.5*d^2,
+    // or O(s*d^2). Now, if we have lists of length s1, s2, ..., sk at depth
+    // d1, d2, ..., dk, the total time to copy them is O(sum(si*di^2, i=1..k)),
+    // or O(s*k*avg(di^2, i=1..k)), or O(s*d_max^2), which is rougher.
     //
     NestedInteger run(const std::string& s)
     {

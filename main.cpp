@@ -155,6 +155,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(combination_sum_4);
 //ADD_TEST(insert_delete_getrandom_o1);
 //ADD_TEST(linked_list_random_node);
-ADD_TEST(mini_parser);
+//ADD_TEST(mini_parser);
+ADD_TEST(lexicographical_numbers);
 
 RUN_TESTS();

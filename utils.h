@@ -39,20 +39,35 @@ std::string to_string(const T& value)
     return s.str();
 }
 
-template <typename T, template <typename, typename...> typename Container>
-std::string to_string(const Container<T>& container)
+// If display_count == 0, prints all elements
+template <typename T, template <typename...> typename Container>
+std::string to_string(const Container<T>& container, size_t display_count = 1024)
 {
-    std::stringstream s;
+    // Print [0, i1) and [i2, end)
+    size_t i1 = 0;
+    size_t i2 = 0;
+    size_t i  = 0;
+    if (display_count && display_count < container.size()) {
+        i1 = display_count / 2 + display_count % 2;
+        i2 = container.size() - display_count / 2;
+    }
 
+    std::stringstream s;
     s << "{";
-    int i = 0;
     for (const T& value : container) {
-        if (i)
-            s << ", ";
-        s << to_string(value);
+        if (i < i1 || i >= i2) {
+            if (i)
+                s << ", ";
+            s << to_string(value);
+        } else if (i == i1) {
+            s << ", ...";
+        }
         i++;
     }
     s << "}";
+
+    if (display_count && container.size() > display_count)
+        s << ", size = " << container.size();
 
     return s.str();
 }

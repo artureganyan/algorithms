@@ -28,6 +28,19 @@
 #define ASSERT(condition) \
     ASSERT_EX(condition, #condition)
 
+#define ASSERT_EXCEPTION(instruction, exception)          \
+    try {                                                 \
+        instruction;                                      \
+        ASSERT_EX(false, #instruction " -> " #exception); \
+    }                                                     \
+    catch (const exception& e) {                          \
+        ASSERT_EX(true, std::string(#instruction " -> " #exception ": ") + e.what()); \
+    }                                                     \
+    catch (...) {                                         \
+        ASSERT_EX(false, #instruction " -> " #exception); \
+    }                                                     \
+    ((void)"Semicolon is required")
+
 
 // Strings
 
@@ -807,10 +820,10 @@ public:
 
     struct Count
     {
-        Count() :
-            current(0),
-            min(std::numeric_limits<int>::max()),
-            max(std::numeric_limits<int>::min()) {}
+        Count(int current_ = 0,
+              int min_ = std::numeric_limits<int>::max(),
+              int max_ = std::numeric_limits<int>::min()) :
+            current(current_), min(min_), max(max_) {}
 
         int current;
         int min;
@@ -840,7 +853,10 @@ public:
 
     Count operationCount(const std::string& name) const
     {
-        return operation_count_.at(name);
+        const auto ci = operation_count_.find(name);
+        if (ci != operation_count_.end())
+            return ci->second;
+        return Count{0, 0, 0};
     }
 
     OperationMap allOperationCount() const

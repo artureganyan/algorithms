@@ -158,6 +158,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(mini_parser);
 //ADD_TEST(lexicographical_numbers);
 //ADD_TEST(longest_absolute_file_path);
-ADD_TEST(elimination_game);
+//ADD_TEST(elimination_game);
+ADD_TEST(decode_string);
 
 RUN_TESTS();

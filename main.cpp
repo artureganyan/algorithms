@@ -159,6 +159,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(lexicographical_numbers);
 //ADD_TEST(longest_absolute_file_path);
 //ADD_TEST(elimination_game);
-ADD_TEST(decode_string);
+//ADD_TEST(decode_string);
+ADD_TEST(longest_substring_with_at_least_k_repeating_characters);
 
 RUN_TESTS();

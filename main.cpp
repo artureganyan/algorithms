@@ -160,6 +160,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(longest_absolute_file_path);
 //ADD_TEST(elimination_game);
 //ADD_TEST(decode_string);
-ADD_TEST(longest_substring_with_at_least_k_repeating_characters);
+//ADD_TEST(longest_substring_with_at_least_k_repeating_characters);
+ADD_TEST(rotate_function);
 
 RUN_TESTS();

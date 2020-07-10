@@ -162,6 +162,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(decode_string);
 //ADD_TEST(longest_substring_with_at_least_k_repeating_characters);
 //ADD_TEST(rotate_function);
-ADD_TEST(integer_replacement);
+//ADD_TEST(integer_replacement);
+ADD_TEST(evaluate_division);
 
 RUN_TESTS();

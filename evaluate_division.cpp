@@ -17,8 +17,8 @@ public:
     // Note: Each equation and query must be a vector of 2 elements:
     // {<var1>, <var2>}. The equations and values must have the same size. The
     // equations must not contradict each other. If both the equations and
-    // queries are empty, returns {}. If some query can't be resolved, its
-    // result is -1 (including when the variable is not present in the
+    // queries are empty, returns empty result. If some query can't be resolved,
+    // its result is -1 (including when the variable is not present in the
     // equations, or division by 0 is required).
     //
     std::vector<double> run(const std::vector<std::vector<std::string>>& equations,
@@ -52,14 +52,14 @@ public:
         // Create equation map
         EquationMap equation_map;
         for (int i = 0; i < equations.size(); i++) {
-            const auto& e     = equations[i];
-            const auto& var1  = e[0];
-            const auto& var2  = e[1];
-            const auto  value = values[i];
+            const auto& e    = equations[i];
+            const auto& var1 = e[0];
+            const auto& var2 = e[1];
+            const auto  v    = values[i];
             
-            equation_map[var1][var2] = value;
-            if (value != 0)
-                equation_map[var2][var1] = 1.0 / value;
+            equation_map[var1][var2] = v;
+            if (v != 0)
+                equation_map[var2][var1] = 1.0 / v;
         }
 
         // Resolve queries
@@ -76,54 +76,50 @@ public:
     }
 
 private:
-    typedef std::unordered_map<std::string /*var1*/, std::unordered_map<std::string /*var2*/, double /*result*/>> EquationMap;
+    typedef std::unordered_map<std::string /*var1*/,
+            std::unordered_map<std::string /*var2*/, double /*result*/>> EquationMap;
 
     struct Result
     {
         double value;
-        bool   found;
+        bool   valid;
     };
 
-    // Returns var1 / var2 if the result can be found in the equations,
-    // otherwise returns 0. The exclude_vars is the internal parameter which
-    // must be set nullptr.
-    //
     Result findResult(const EquationMap& equations, const std::string& var1, const std::string& var2,
-        std::unordered_set<std::string>* exclude_vars = nullptr) const
+        std::unordered_set<std::string>* vars = nullptr) const
     {
-        // Check if (var1, var2) is directly present in the equations
+        // Check if var1/var2 is directly present in the equations
         if (const auto vi1 = equations.find(var1); vi1 != equations.end()) {
-            if (var1 == var2)
-                return {1, true};
-
-            if (const auto vi2 = vi1->second.find(var2); vi2 != vi1->second.end())
+            const auto& var1_equations = vi1->second;
+            if (const auto vi2 = var1_equations.find(var2); vi2 != var1_equations.end())
                 return {vi2->second, true};
-        }
 
-        // Initialize exclude_vars
-        std::unordered_set<std::string> exclude_vars_;
-        if (!exclude_vars) {
-            exclude_vars_ = {var1, var2};
-            exclude_vars  = &exclude_vars_;
-        }
-
-        // Find var_i such that (var1, var_i) and (var_i, var2) can be resolved.
-        // If found, return (var1, var_i) * (var_i, var2). Otherwise, the query
-        // can't be resolved.
-        for (const auto e : equations) {
-            const auto& var = e.first;
-
-            if (exclude_vars->find(var) != exclude_vars->end())
-                continue;
-            exclude_vars->insert(var);
-
-            if (const auto r1 = findResult(equations, var1, e.first, exclude_vars); r1.found) {
-                if (const auto r2 = findResult(equations, e.first, var2, exclude_vars); r2.found) {
-                    return {r1.value * r2.value, true};
-                }
+            if (var1 == var2) {
+                // v/v == 1 if v is present and not 0
+                if (var1_equations.size() && var1_equations.begin()->second != 0)
+                    return {1, true};
+                return {-1, false};
             }
-            
-            exclude_vars->erase(var);
+        }
+
+        // Initialize vars if needed
+        std::unordered_set<std::string> vars_;
+        if (!vars) {
+            for (const auto e : equations)
+                vars_.insert(e.first);    
+            vars = &vars_;
+        }
+
+        // Find var_i such that var1/var_i and var_i/var2 can be resolved. If
+        // found, return var1/var_i * var_i/var2. Otherwise, the query can't
+        // be resolved.
+        for (const auto v : *vars) {
+            vars->erase(v);
+            if (const auto r1 = findResult(equations, var1, v, vars); r1.valid) {
+                if (const auto r2 = findResult(equations, v, var2, vars); r2.valid)
+                    return {r1.value * r2.value, true};
+            }
+            vars->insert(v);
         }
         return {-1, false};
     }
@@ -139,7 +135,7 @@ int main()
     {
         const auto result = Solution().run(equations, values, queries);
         
-        ASSERT_EX( compare_sets(result, expected),
+        ASSERT_EX( result == expected,
             to_string(equations) + ", " + to_string(values)  + ", " + to_string(queries) + " -> " +
             to_string(expected) );
     };
@@ -147,13 +143,15 @@ int main()
     test({}, {}, {}, {});
     
     test({{"", ""}}, {1}, {{"", ""}}, {1});
+    
     test({{"a", "a"}}, {1}, {{"a", "a"}}, {1});
     test({{"a", "a"}}, {1}, {{"a", "b"}}, {-1});
+    test({{"a", "a"}}, {1}, {{"b", "a"}}, {-1});
     test({{"a", "a"}}, {1}, {{"b", "b"}}, {-1});
 
-    test({{"a", "b"}}, {0}, {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, 0, 1, -1});
-    test({{"a", "b"}}, {1}, {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, 1, 1, 1});
-    test({{"a", "b"}}, {2}, {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, 2, 1.0/2, 1});
+    test({{"a", "b"}}, {0},  {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {-1, 0, -1, -1});
+    test({{"a", "b"}}, {1},  {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, 1, 1, 1});
+    test({{"a", "b"}}, {2},  {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, 2, 1.0/2, 1});
     test({{"a", "b"}}, {-1}, {{"a", "a"}, {"a", "b"}, {"b", "a"}, {"b", "b"}}, {1, -1, -1, 1});
     
     test({{"a", "b"}, {"b", "c"}}, {2, 4}, {{"a", "c"}, {"c", "a"}}, {8, 1.0/8});

@@ -164,6 +164,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(rotate_function);
 //ADD_TEST(integer_replacement);
 //ADD_TEST(evaluate_division);
-ADD_TEST(nth_digit);
+//ADD_TEST(nth_digit);
+ADD_TEST(remove_k_digits);
 
 RUN_TESTS();

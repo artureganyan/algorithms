@@ -165,6 +165,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(integer_replacement);
 //ADD_TEST(evaluate_division);
 //ADD_TEST(nth_digit);
-ADD_TEST(remove_k_digits);
+//ADD_TEST(remove_k_digits);
+ADD_TEST(queue_reconstruction_by_height);
 
 RUN_TESTS();

@@ -169,6 +169,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(queue_reconstruction_by_height);
 //ADD_TEST(arithmetic_slices);
 //ADD_TEST(partition_equal_subset_sum);
-ADD_TEST(pacific_atlantic_water_flow);
+//ADD_TEST(pacific_atlantic_water_flow);
+ADD_TEST(battleships_in_a_board);
 
 RUN_TESTS();

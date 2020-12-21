@@ -170,6 +170,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(arithmetic_slices);
 //ADD_TEST(partition_equal_subset_sum);
 //ADD_TEST(pacific_atlantic_water_flow);
-ADD_TEST(battleships_in_a_board);
+//ADD_TEST(battleships_in_a_board);
+ADD_TEST(maximum_xor_of_two_numbers_in_an_array);
 
 RUN_TESTS();

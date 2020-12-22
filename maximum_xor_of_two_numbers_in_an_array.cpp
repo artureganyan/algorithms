@@ -45,6 +45,14 @@ public:
     //
     int run(const std::vector<int>& nums)
     {
+        // Idea:
+        // For any nums[i], the maximum possible nums[i] ^ nums[j] is for 
+        // nums[j] == ~nums[i] (so that nums[i] ^ nums[j] = 11...1 binary). If
+        // there is no such nums[j], the maximum will be for nums[j] which has
+        // the maximum of the most-significant bits of ~nums[i]. So we should
+        // search for nums[j] by comparing the numbers with ~nums[i] from the
+        // prefix. This search can be done in O(1) time via the prefix tree.
+
         if (nums.size() <= 1)
             return 0;
 

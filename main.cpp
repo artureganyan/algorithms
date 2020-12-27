@@ -172,6 +172,7 @@ static std::vector<TestEntryPoint*> tests;
 //ADD_TEST(pacific_atlantic_water_flow);
 //ADD_TEST(battleships_in_a_board);
 //ADD_TEST(maximum_xor_of_two_numbers_in_an_array);
-ADD_TEST(reconstruct_original_digits_from_english);
+//ADD_TEST(reconstruct_original_digits_from_english);
+ADD_TEST(longest_repeating_character_replacement);
 
 RUN_TESTS();
